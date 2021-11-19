@@ -1,13 +1,10 @@
+## rescript-json
 
+> A port of https://package.elm-lang.org/packages/elm/json/latest/ to rescript
 
-# Build
+### Install
 ```
-npm run build
+yarn add rescript-json
 ```
 
-# Watch
-
-```
-npm run watch
-```
 
