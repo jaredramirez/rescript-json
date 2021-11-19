@@ -17,7 +17,7 @@ module Utils = {
     }
 }
 
-module Decoder = {
+module Decode = {
   type rec error =
     | Failure(string, value)
     | Index(int, error)
@@ -108,23 +108,24 @@ module Decoder = {
       ->B.Result.flatMap(jv => aDecoder(jv)->Utils.resMapError(e => Field(key, e))),
   )
 
+  let atHelp = (j, k) =>
+    j
+    ->J.decodeObject
+    ->Utils.optToRes(Failure("invalid object", j))
+    ->B.Result.flatMap(sObj =>
+      sObj
+      ->Js.Dict.get(k)
+      ->Utils.optToRes(Field(k, Failure("does not exist", j)))
+      ->B.Result.map(ssj => (ssj, k))
+    )
   let at: (string, array<string>, t<'a>) => t<'a> = (firstKey, keys, Decoder(aDecoder)) => Decoder(
     j => {
       keys->Js.Array2.reduce((acc, cur) => {
         switch acc {
         | Error(_) => acc
-        | Ok(sj, _) =>
-          sj
-          ->J.decodeObject
-          ->Utils.optToRes(Failure("invalid object", sj))
-          ->B.Result.flatMap(sObj =>
-            sObj
-            ->Js.Dict.get(cur)
-            ->Utils.optToRes(Field(cur, Failure("does not exist", sj)))
-            ->B.Result.map(ssj => (ssj, cur))
-          )
+        | Ok(sj, _) => atHelp(sj, cur)
         }
-      }, Ok(
+      }, atHelp(
         j,
         firstKey,
       ))->B.Result.flatMap(((jv, key)) => aDecoder(jv)->Utils.resMapError(e => Field(key, e)))

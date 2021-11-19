@@ -8,7 +8,7 @@ clean:
 	rescript clean
 	
 test:
-	node ./lib/js/tests/json.test.js
+	node ./lib/js/tests/JsonTests.js
 	
 start:
-	nodemon ./lib/js/tests/json.test.js
+	nodemon ./lib/js/tests/JsonTests.js
