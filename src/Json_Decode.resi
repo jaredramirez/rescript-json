@@ -16,7 +16,11 @@ let float: t<float>
 
 // data structures
 
+let nullable: t<'a> => t<option<'a>> 
+
 let array: t<'a> => t<array<'a>> 
+
+let list: t<'a> => t<list<'a>>
 
 let dict: t<'a> => t<Js.Dict.t<'a>> 
 
@@ -49,24 +53,6 @@ let errorToString: error => string
 let map: (t<'a>, 'a => 'b) => t<'b> 
 
 let map2: (t<'a>, t<'b>, ('a, 'b) => 'c) => t<'c> 
-
-let andMap: (t<'a => 'b>, t<'a>) => t<'b> 
-
-// fancy
-
-let null: 'a => t<'a> 
-
-let nullable: t<'a> => t<option<'a>> 
-
-let value: t<value> 
-
-let andThen: (t<'a>, 'a => t<'b>) => t<'b> 
-
-let succeed: 'a => t<'a> 
-
-let fail: string => t<'a> 
-
-// combine extra
 
 let map3: (t<'a>, t<'b>, t<'c>, ('a, 'b, 'c) => 'val) => t<'val> 
 
@@ -106,3 +92,18 @@ let map8: (
   t<'h>,
   ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h) => 'val,
 ) => t<'val> 
+
+let andMap: (t<'a => 'b>, t<'a>) => t<'b> 
+
+// fancy
+
+let null: 'a => t<'a> 
+
+let value: t<value> 
+
+let andThen: (t<'a>, 'a => t<'b>) => t<'b> 
+
+let succeed: 'a => t<'a> 
+
+let fail: string => t<'a> 
+

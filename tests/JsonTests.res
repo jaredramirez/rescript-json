@@ -1,6 +1,6 @@
 open Zora
 
-zora("decoder tests", t => {
+zora("decode tests", t => {
   open! Json.Decode
 
   t->test("should decode a string", t => {
@@ -35,6 +35,16 @@ zora("decoder tests", t => {
 
   t->test("should decode array", t => {
     t->equal(decodeString(array(int), `[1, 2, 3]`), Ok([1, 2, 3]), "Should equal")
+    done()
+  })
+
+  t->test("should decode empty list", t => {
+    t->equal(decodeString(list(int), `[]`), Ok(list{}), "Should equal")
+    done()
+  })
+
+  t->test("should decode list", t => {
+    t->equal(decodeString(list(int), `[1, 2, 3]`), Ok(list{1, 2, 3}), "Should equal")
     done()
   })
 
@@ -183,6 +193,79 @@ zora("decoder tests", t => {
 
   t->test("should fail", t => {
     t->resultError(decodeString(fail("bad"), `"value"`), "Should be error")
+    done()
+  })
+
+  done()
+})
+
+zora("encode tests", t => {
+  open! Json.Encode
+
+  t->test("should encode a string", t => {
+    t->equal(encode(string("value"), 0), `"value"`, "Should equal")
+    done()
+  })
+
+  t->test("should encode a int", t => {
+    t->equal(encode(int(1), 0), `1`, "Should equal")
+    done()
+  })
+
+  t->test("should encode a float", t => {
+    t->equal(encode(float(1.), 0), `1`, "Should equal")
+    done()
+  })
+
+  t->test("should encode a bool", t => {
+    t->equal(encode(bool(true), 0), `true`, "Should equal")
+    done()
+  })
+
+  t->test("should encode a null", t => {
+    t->equal(encode(null, 0), `null`, "Should equal")
+    done()
+  })
+
+  t->test("should encode an empty array", t => {
+    t->equal(encode(array([], int), 0), `[]`, "Should equal")
+    done()
+  })
+
+  t->test("should encode an array", t => {
+    t->equal(encode(array([1, 2], int), 0), `[1,2]`, "Should equal")
+    done()
+  })
+
+  t->test("should encode an empty list", t => {
+    t->equal(encode(list(list{}, int), 0), `[]`, "Should equal")
+    done()
+  })
+
+  t->test("should encode an list", t => {
+    t->equal(encode(list(list{1, 2}, int), 0), `[1,2]`, "Should equal")
+    done()
+  })
+
+  t->test("should encode an empty object", t => {
+    t->equal(encode(object([]), 0), `{}`, "Should equal")
+    done()
+  })
+
+  t->test("should encode an object", t => {
+    t->equal(encode(object([("a", int(1))]), 0), `{"a":1}`, "Should equal")
+    done()
+  })
+
+  t->test("should encode an empty dict", t => {
+    t->equal(encode(dict(Js.Dict.empty()), 0), `{}`, "Should equal")
+    done()
+  })
+
+  t->test("should encode an dict", t => {
+    let d = Js.Dict.empty()
+    d->Js.Dict.set("a", int(1))
+    t->equal(encode(dict(d), 0), `{"a":1}`, "Should equal")
     done()
   })
 

@@ -57,6 +57,23 @@ let array: t<'a> => t<array<'a>> = (Decoder(aDecoder)) => Decoder(
       }, Ok([]))),
 )
 
+let list: t<'a> => t<list<'a>> = (Decoder(aDecoder)) => Decoder(
+  j =>
+    j
+    ->J.decodeArray
+    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->B.Result.flatMap(arr => arr->B.Array.reverse->Js.Array2.reducei((acc, cur, index) => {
+        switch acc {
+        | Error(_) => acc
+        | Ok(soFar) =>
+          switch aDecoder(cur) {
+          | Error(error) => Error(Index(index, error))
+          | Ok(a) => list{a, ...soFar}->Ok
+          }
+        }
+      }, Ok(list{}))),
+)
+
 let dict: t<'a> => t<Js.Dict.t<'a>> = (Decoder(aDecoder)) => Decoder(
   j =>
     j
