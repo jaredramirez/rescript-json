@@ -6,6 +6,9 @@
   "author": "Jared Ramirez <jaredramirez@hey.com>",
   "license": "MIT",
   "devDependencies": {
-    "rescript": "^9.1.4"
+    "@dusty-phillips/rescript-zora": "^3.0.0",
+    "nodemon": "^2.0.15",
+    "rescript": "^9.1.4",
+    "zora": "^5.0.1"
   }
 }

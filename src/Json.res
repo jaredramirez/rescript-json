@@ -3,13 +3,6 @@ module B = Belt
 
 type value = J.t
 
-let fromString: string => option<value> = s =>
-  try J.parseExn(s)->Some catch {
-  | _ => None
-  }
-
-let toString: value => string = J.stringify
-
 module Utils = {
   let optToRes = (option, err) =>
     switch option {
@@ -175,6 +168,11 @@ module Decoder = {
 
   // run decoders
 
+  let fromString: string => option<value> = s =>
+    try J.parseExn(s)->Some catch {
+    | _ => None
+    }
+
   let decodeString: (t<'a>, string) => result<'a, error> = (Decoder(decoder), s) =>
     s->fromString->Utils.optToRes(Failure("Invalid JSON", J.string(s)))->B.Result.flatMap(decoder)
 
@@ -205,6 +203,8 @@ module Decoder = {
 
   let nullable: t<'a> => t<option<'a>> = decoder => oneOf(decoder->map(a => Some(a)), [null(None)])
 
+  let value: t<value> = Decoder(j => Ok(j))
+
   let andThen: (t<'a>, 'a => t<'b>) => t<'b> = (Decoder(decoder), f) => Decoder(
     j =>
       j
@@ -218,4 +218,8 @@ module Decoder = {
   let succeed: 'a => t<'a> = a => Decoder(_ => Ok(a))
 
   let fail: string => t<'a> = err => Decoder(j => Error(Failure(err, j)))
+}
+
+module Encode = {
+  let toString: value => string = J.stringify
 }
