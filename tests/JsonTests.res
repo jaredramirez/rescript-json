@@ -137,8 +137,25 @@ zora("decoder tests", t => {
 
   t->test("should be able to map2", t => {
     t->equal(
-      decodeString(map2(field("a", int), field("b", int), (a, b) => a + b), `{ "a": 1, "b": 1 }`),
-      Ok(2),
+      decodeString(
+        map2(field("a", string), field("b", int), (a, b) => Js.String.length(a) * b),
+        `{ "a": "hi", "b": 3 }`,
+      ),
+      Ok(6),
+      "Should equal",
+    )
+    done()
+  })
+
+  t->test("should be able to map3", t => {
+    t->equal(
+      decodeString(
+        map3(field("a", string), field("b", int), field("c", int), (a, b, c) =>
+          Js.String.length(a) * b + c
+        ),
+        `{ "a": "hi", "b": 3, "c": 3 }`,
+      ),
+      Ok(9),
       "Should equal",
     )
     done()
