@@ -212,7 +212,64 @@ let decodeString: (t<'a>, string) => result<'a, error> = (Decoder(decoder), s) =
 
 let decodeValue: (t<'a>, value) => result<'a, error> = (Decoder(decoder), j) => decoder(j)
 
-let errorToString: error => string = _e => "TODO"
+// print errors
+
+let joinList = (l, s) =>
+  switch l {
+  | list{} => ""
+  | list{h, ...r} =>
+    B.List.reduce(r, h, (acc, cur) => {
+      acc ++ s ++ cur
+    })
+  }
+
+let indent = str => joinList(str->Js.String2.split("\n")->B.List.fromArray, "\n    ")
+
+let rec errorToStringHelp = (error, context) =>
+  switch error {
+  | Field(key, err) => {
+      // TODO `.${key}` if key is a valid id
+      let fieldName = `["${key}"]`
+      errorToStringHelp(err, list{fieldName, ...context})
+    }
+  | Index(index, err) => {
+      let fieldName = `[${index->B.Int.toString}]`
+      errorToStringHelp(err, list{fieldName, ...context})
+    }
+  | OneOf(firstErr, errs) =>
+    switch errs {
+    | [] => errorToStringHelp(firstErr, context)
+    | _ => {
+        let starter = switch context->B.List.reverse {
+        | list{} => "oneOf"
+        | reveresed => `oneOf at json${reveresed->joinList("")}`
+        }
+        let intro = `${starter} failed in the following ${context
+          ->B.List.length
+          ->B.Int.toString} ways:`
+        joinList(
+          list{
+            intro,
+            ...B.Array.concat([firstErr], errs)
+            ->B.List.fromArray
+            ->B.List.mapWithIndex((i, err) =>
+              "\n\n(" ++ B.Int.toString(i + 1) ++ ") " ++ indent(errorToStringHelp(err, list{}))
+            ),
+          },
+          "\n\n",
+        )
+      }
+    }
+  | Failure(str, j) => {
+      let intro = switch context->B.List.reverse {
+      | list{} => "Problem with the given value:\n\n"
+      | reveresed => `Problem with the value at json${reveresed->joinList("")}`
+      }
+      `${intro}${indent(Json_Encode.encode(j, 4))}\n\n${str}`
+    }
+  }
+
+let errorToString: error => string = e => errorToStringHelp(e, list{})
 
 // combine
 

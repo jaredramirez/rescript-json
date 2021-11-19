@@ -1,4 +1,4 @@
-type value
+type value = Js.Json.t
 
 let encode: (value, int) => string
 
