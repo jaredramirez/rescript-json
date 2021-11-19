@@ -64,15 +64,15 @@ let errorToString: error => string
 
 // combine
 
-let map: (t<'a>, 'a => 'b) => t<'b> 
+let map: (t<'a>, ~f: 'a => 'b) => t<'b> 
 
-let map2: (t<'a>, t<'b>, ('a, 'b) => 'c) => t<'c> 
+let map2: (t<'a>, t<'b>, ~f: ('a, 'b) => 'c) => t<'c> 
 
-let map3: (t<'a>, t<'b>, t<'c>, ('a, 'b, 'c) => 'val) => t<'val> 
+let map3: (t<'a>, t<'b>, t<'c>, ~f: ('a, 'b, 'c) => 'val) => t<'val> 
 
-let map4: (t<'a>, t<'b>, t<'c>, t<'d>, ('a, 'b, 'c, 'd) => 'val) => t<'val> 
+let map4: (t<'a>, t<'b>, t<'c>, t<'d>, ~f: ('a, 'b, 'c, 'd) => 'val) => t<'val> 
 
-let map5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, ('a, 'b, 'c, 'd, 'e) => 'val) => t<'val> 
+let map5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, ~f: ('a, 'b, 'c, 'd, 'e) => 'val) => t<'val> 
 
 let map6: (
   t<'a>,
@@ -81,7 +81,7 @@ let map6: (
   t<'d>,
   t<'e>,
   t<'f>,
-  ('a, 'b, 'c, 'd, 'e, 'f) => 'val,
+  ~f: ('a, 'b, 'c, 'd, 'e, 'f) => 'val,
 ) => t<'val> 
 
 let map7: (
@@ -92,7 +92,7 @@ let map7: (
   t<'e>,
   t<'f>,
   t<'g>,
-  ('a, 'b, 'c, 'd, 'e, 'f, 'g) => 'val,
+  ~f: ('a, 'b, 'c, 'd, 'e, 'f, 'g) => 'val,
 ) => t<'val> 
 
 let map8: (
@@ -104,7 +104,7 @@ let map8: (
   t<'f>,
   t<'g>,
   t<'h>,
-  ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h) => 'val,
+  ~f: ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h) => 'val,
 ) => t<'val> 
 
 let andMap: (t<'a => 'b>, t<'a>) => t<'b> 
@@ -115,7 +115,7 @@ let null: 'a => t<'a>
 
 let value: t<value> 
 
-let andThen: (t<'a>, 'a => t<'b>) => t<'b> 
+let andThen: (t<'a>, ~f: 'a => t<'b>) => t<'b> 
 
 let succeed: 'a => t<'a> 
 

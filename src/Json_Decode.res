@@ -32,15 +32,20 @@ type t<'a> = Decoder(value => result<'a, error>)
 
 // primatives
 
-let string: t<string> = Decoder(j => j->J.decodeString->Utils.optToRes(Failure("a STRING", j)))
-
-let bool: t<bool> = Decoder(j => j->J.decodeBoolean->Utils.optToRes(Failure("a BOOL", j)))
-
-let int: t<int> = Decoder(
-  j => j->J.decodeNumber->B.Option.map(B.Float.toInt)->Utils.optToRes(Failure("an INT", j)),
+let string: t<string> = Decoder(
+  j => j->J.decodeString->Utils.optToRes(Failure("Expecting a STRING", j)),
 )
 
-let float: t<float> = Decoder(j => j->J.decodeNumber->Utils.optToRes(Failure("a FLOAT", j)))
+let bool: t<bool> = Decoder(j => j->J.decodeBoolean->Utils.optToRes(Failure("Expecting a BOOL", j)))
+
+let int: t<int> = Decoder(
+  j =>
+    j->J.decodeNumber->B.Option.map(B.Float.toInt)->Utils.optToRes(Failure("Expecting an INT", j)),
+)
+
+let float: t<float> = Decoder(
+  j => j->J.decodeNumber->Utils.optToRes(Failure("Expecting a FLOAT", j)),
+)
 
 // data structures
 
@@ -48,7 +53,7 @@ let array: t<'a> => t<array<'a>> = (Decoder(aDecoder)) => Decoder(
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr => arr->Js.Array2.reducei((acc, cur, index) => {
         switch acc {
         | Error(_) => acc
@@ -65,7 +70,7 @@ let list: t<'a> => t<list<'a>> = (Decoder(aDecoder)) => Decoder(
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr => arr->B.Array.reverse->Js.Array2.reducei((acc, cur, index) => {
         switch acc {
         | Error(_) => acc
@@ -82,7 +87,7 @@ let dict: t<'a> => t<Js.Dict.t<'a>> = (Decoder(aDecoder)) => Decoder(
   j =>
     j
     ->J.decodeObject
-    ->Utils.optToRes(Failure("an OBJECT", j))
+    ->Utils.optToRes(Failure("Expecting an OBJECT", j))
     ->B.Result.flatMap(obj => obj->Js.Dict.entries->Js.Array2.reduce((acc, (key, cur)) => {
         switch acc {
         | Error(_) => acc
@@ -100,7 +105,7 @@ let keyValuePairs: t<'a> => t<array<(string, 'a)>> = (Decoder(aDecoder)) => Deco
   j =>
     j
     ->J.decodeObject
-    ->Utils.optToRes(Failure("an OBJECT", j))
+    ->Utils.optToRes(Failure("Expecting an OBJECT", j))
     ->B.Result.flatMap(obj => obj->Js.Dict.entries->Js.Array2.reduce((acc, (key, cur)) => {
         switch acc {
         | Error(_) => acc
@@ -117,11 +122,11 @@ let tuple2: (t<'a>, t<'b>) => t<('a, 'b)> = (Decoder(aDecoder), Decoder(bDecoder
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr =>
       switch arr {
       | [a, b] => Ok((a, b) => (a, b))->Utils.resAndMap(aDecoder(a))->Utils.resAndMap(bDecoder(b))
-      | _ => Error(Failure("an ARRAY with 2 elements", j))
+      | _ => Error(Failure("Expecting an ARRAY with 2 elements", j))
       }
     ),
 )
@@ -134,7 +139,7 @@ let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)> = (
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr =>
       switch arr {
       | [a, b, c] =>
@@ -143,7 +148,7 @@ let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)> = (
         ->Utils.resAndMap(bDecoder(b))
         ->Utils.resAndMap(cDecoder(c))
 
-      | _ => Error(Failure("an ARRAY with 3 elements", j))
+      | _ => Error(Failure("Expecting an ARRAY with 3 elements", j))
       }
     ),
 )
@@ -157,7 +162,7 @@ let tuple4: (t<'a>, t<'b>, t<'c>, t<'d>) => t<('a, 'b, 'c, 'd)> = (
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr =>
       switch arr {
       | [a, b, c, d] =>
@@ -167,7 +172,7 @@ let tuple4: (t<'a>, t<'b>, t<'c>, t<'d>) => t<('a, 'b, 'c, 'd)> = (
         ->Utils.resAndMap(cDecoder(c))
         ->Utils.resAndMap(dDecoder(d))
 
-      | _ => Error(Failure("an ARRAY with 4 elements", j))
+      | _ => Error(Failure("Expecting an ARRAY with 4 elements", j))
       }
     ),
 )
@@ -182,7 +187,7 @@ let tuple5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>) => t<('a, 'b, 'c, 'd, 'e)> = (
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr =>
       switch arr {
       | [a, b, c, d, e] =>
@@ -192,7 +197,7 @@ let tuple5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>) => t<('a, 'b, 'c, 'd, 'e)> = (
         ->Utils.resAndMap(cDecoder(c))
         ->Utils.resAndMap(dDecoder(d))
         ->Utils.resAndMap(eDecoder(e))
-      | _ => Error(Failure("an ARRAY with 5 elements", j))
+      | _ => Error(Failure("Expecting an ARRAY with 5 elements", j))
       }
     ),
 )
@@ -208,7 +213,7 @@ let tuple6: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>) => t<('a, 'b, 'c, 'd, 'e,
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr =>
       switch arr {
       | [a, b, c, d, e, f] =>
@@ -219,7 +224,7 @@ let tuple6: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>) => t<('a, 'b, 'c, 'd, 'e,
         ->Utils.resAndMap(dDecoder(d))
         ->Utils.resAndMap(eDecoder(e))
         ->Utils.resAndMap(fDecoder(f))
-      | _ => Error(Failure("an ARRAY with 6 elements", j))
+      | _ => Error(Failure("Expecting an ARRAY with 6 elements", j))
       }
     ),
 )
@@ -236,7 +241,7 @@ let tuple7: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>, t<'g>) => t<('a, 'b, 'c, 
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr =>
       switch arr {
       | [a, b, c, d, e, f, g] =>
@@ -248,7 +253,7 @@ let tuple7: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>, t<'g>) => t<('a, 'b, 'c, 
         ->Utils.resAndMap(eDecoder(e))
         ->Utils.resAndMap(fDecoder(f))
         ->Utils.resAndMap(gDecoder(g))
-      | _ => Error(Failure("an ARRAY with 7 elements", j))
+      | _ => Error(Failure("Expecting an ARRAY with 7 elements", j))
       }
     ),
 )
@@ -275,7 +280,7 @@ let tuple8: (
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr =>
       switch arr {
       | [a, b, c, d, e, f, g, h] =>
@@ -288,7 +293,7 @@ let tuple8: (
         ->Utils.resAndMap(fDecoder(f))
         ->Utils.resAndMap(gDecoder(g))
         ->Utils.resAndMap(hDecoder(h))
-      | _ => Error(Failure("an ARRAY with 8 elements", j))
+      | _ => Error(Failure("Expecting an ARRAY with 8 elements", j))
       }
     ),
 )
@@ -298,9 +303,11 @@ let tuple8: (
 let fieldHelp = (j, key) =>
   j
   ->J.decodeObject
-  ->Utils.optToRes(Failure(`an OBJECT with a field named '${key}'`, j))
+  ->Utils.optToRes(Failure(`Expecting an OBJECT with a field named '${key}'`, j))
   ->B.Result.flatMap(sObj =>
-    sObj->Js.Dict.get(key)->Utils.optToRes(Failure(`an OBJECT with a field named '${key}'`, j))
+    sObj
+    ->Js.Dict.get(key)
+    ->Utils.optToRes(Failure(`Expecting an OBJECT with a field named '${key}'`, j))
   )
 
 let field: (string, t<'a>) => t<'a> = (key, Decoder(aDecoder)) => Decoder(
@@ -326,12 +333,12 @@ let index: (int, t<'a>) => t<'a> = (index, Decoder(aDecoder)) => Decoder(
   j =>
     j
     ->J.decodeArray
-    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->Utils.optToRes(Failure("Expecting an ARRAY", j))
     ->B.Result.flatMap(arr =>
       if B.Array.length(arr) == 0 {
         Error(
           Failure(
-            `a NON-EMPTY array. Need index ${index->B.Int.toString} but only saw an empty array`,
+            `Expecting a NON-EMPTY array. Need index ${index->B.Int.toString} but only saw an empty array`,
             j,
           ),
         )
@@ -341,18 +348,13 @@ let index: (int, t<'a>) => t<'a> = (index, Decoder(aDecoder)) => Decoder(
         ->Utils.optToRes(
           if index >= B.Array.length(arr) {
             Failure(
-              `a LONGER array. Need index ${index->B.Int.toString} but only saw ${arr
+              `Expecting a LONGER array. Need index ${index->B.Int.toString} but only saw ${arr
                 ->B.Array.length
                 ->B.Int.toString} entries`,
               j,
             )
           } else {
-            Failure(
-              `a POSITIVE index. Array has ${arr
-                ->B.Array.length
-                ->B.Int.toString} entries but tried to decode index ${index->B.Int.toString}`,
-              j,
-            )
+            Failure(`Expecting a POSITIVE index but saw ${index->B.Int.toString}`, j)
           },
         )
       }
@@ -447,7 +449,7 @@ let rec errorToStringHelp = (error, context) =>
   | Failure(str, j) => {
       let intro = switch context->B.List.reverse {
       | list{} => "Problem with the given value:\n\n"
-      | reveresed => `Problem with the value at json${reveresed->joinList("")}`
+      | reveresed => `Problem with the value at json${reveresed->joinList("")}:\n\n    `
       }
       `${intro}${indent(Json_Encode.encode(j, 4))}\n\n${str}`
     }
@@ -457,18 +459,18 @@ let errorToString: error => string = e => errorToStringHelp(e, list{})
 
 // combine
 
-let map: (t<'a>, 'a => 'b) => t<'b> = (Decoder(decoder), f) => Decoder(
+let map: (t<'a>, ~f: 'a => 'b) => t<'b> = (Decoder(decoder), ~f) => Decoder(
   j => j->decoder->B.Result.map(f),
 )
 
-let map2: (t<'a>, t<'b>, ('a, 'b) => 'c) => t<'c> = (
+let map2: (t<'a>, t<'b>, ~f: ('a, 'b) => 'c) => t<'c> = (
   Decoder(decoderA),
   Decoder(decoderB),
-  f,
+  ~f,
 ) => Decoder(j => j->decoderA->B.Result.flatMap(a => j->decoderB->B.Result.map(b => f(a, b))))
 
 let andMap: (t<'a => 'b>, t<'a>) => t<'b> = (decoderF, decoderA) =>
-  map2(decoderF, decoderA, (f, a) => f(a))
+  map2(decoderF, decoderA, ~f=(f, a) => f(a))
 
 // fancy
 
@@ -476,11 +478,11 @@ let null: 'a => t<'a> = v => Decoder(
   j => j->J.decodeNull->Utils.optToRes(Failure("invalid null", j))->B.Result.map(_ => v),
 )
 
-let nullable: t<'a> => t<option<'a>> = decoder => oneOf(decoder->map(a => Some(a)), [null(None)])
+let nullable: t<'a> => t<option<'a>> = decoder => oneOf(decoder->map(~f=a => Some(a)), [null(None)])
 
 let value: t<value> = Decoder(j => Ok(j))
 
-let andThen: (t<'a>, 'a => t<'b>) => t<'b> = (Decoder(decoder), f) => Decoder(
+let andThen: (t<'a>, ~f: 'a => t<'b>) => t<'b> = (Decoder(decoder), ~f) => Decoder(
   j =>
     j
     ->decoder
@@ -496,28 +498,28 @@ let fail: string => t<'a> = err => Decoder(j => Error(Failure(err, j)))
 
 // combine extra
 
-let map3: (t<'a>, t<'b>, t<'c>, ('a, 'b, 'c) => 'val) => t<'val> = (
+let map3: (t<'a>, t<'b>, t<'c>, ~f: ('a, 'b, 'c) => 'val) => t<'val> = (
   decoderA,
   decoderB,
   decoderC,
-  f,
+  ~f,
 ) => succeed(f)->andMap(decoderA)->andMap(decoderB)->andMap(decoderC)
 
-let map4: (t<'a>, t<'b>, t<'c>, t<'d>, ('a, 'b, 'c, 'd) => 'val) => t<'val> = (
+let map4: (t<'a>, t<'b>, t<'c>, t<'d>, ~f: ('a, 'b, 'c, 'd) => 'val) => t<'val> = (
   decoderA,
   decoderB,
   decoderC,
   decoderD,
-  f,
+  ~f,
 ) => succeed(f)->andMap(decoderA)->andMap(decoderB)->andMap(decoderC)->andMap(decoderD)
 
-let map5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, ('a, 'b, 'c, 'd, 'e) => 'val) => t<'val> = (
+let map5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, ~f: ('a, 'b, 'c, 'd, 'e) => 'val) => t<'val> = (
   decoderA,
   decoderB,
   decoderC,
   decoderD,
   decoderE,
-  f,
+  ~f,
 ) =>
   succeed(f)
   ->andMap(decoderA)
@@ -533,8 +535,8 @@ let map6: (
   t<'d>,
   t<'e>,
   t<'f>,
-  ('a, 'b, 'c, 'd, 'e, 'f) => 'val,
-) => t<'val> = (decoderA, decoderB, decoderC, decoderD, decoderE, decoderF, f) =>
+  ~f: ('a, 'b, 'c, 'd, 'e, 'f) => 'val,
+) => t<'val> = (decoderA, decoderB, decoderC, decoderD, decoderE, decoderF, ~f) =>
   succeed(f)
   ->andMap(decoderA)
   ->andMap(decoderB)
@@ -551,8 +553,8 @@ let map7: (
   t<'e>,
   t<'f>,
   t<'g>,
-  ('a, 'b, 'c, 'd, 'e, 'f, 'g) => 'val,
-) => t<'val> = (decoderA, decoderB, decoderC, decoderD, decoderE, decoderF, decoderG, f) =>
+  ~f: ('a, 'b, 'c, 'd, 'e, 'f, 'g) => 'val,
+) => t<'val> = (decoderA, decoderB, decoderC, decoderD, decoderE, decoderF, decoderG, ~f) =>
   succeed(f)
   ->andMap(decoderA)
   ->andMap(decoderB)
@@ -571,7 +573,7 @@ let map8: (
   t<'f>,
   t<'g>,
   t<'h>,
-  ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h) => 'val,
+  ~f: ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h) => 'val,
 ) => t<'val> = (
   decoderA,
   decoderB,
@@ -581,7 +583,7 @@ let map8: (
   decoderF,
   decoderG,
   decoderH,
-  f,
+  ~f,
 ) =>
   succeed(f)
   ->andMap(decoderA)

@@ -155,7 +155,7 @@ zora("decode tests", t => {
   })
 
   t->test("should be able to map", t => {
-    t->equal(decodeString(`1`, int->map(i => i + 1)), Ok(2), "Should equal")
+    t->equal(decodeString(`1`, int->map(~f=i => i + 1)), Ok(2), "Should equal")
     done()
   })
 
@@ -163,7 +163,7 @@ zora("decode tests", t => {
     t->equal(
       decodeString(
         `{ "a": "hi", "b": 3 }`,
-        map2(field("a", string), field("b", int), (a, b) => Js.String.length(a) * b),
+        map2(field("a", string), field("b", int), ~f=(a, b) => Js.String.length(a) * b),
       ),
       Ok(6),
       "Should equal",
@@ -175,7 +175,7 @@ zora("decode tests", t => {
     t->equal(
       decodeString(
         `{ "a": "hi", "b": 3, "c": 3 }`,
-        map3(field("a", string), field("b", int), field("c", int), (a, b, c) =>
+        map3(field("a", string), field("b", int), field("c", int), ~f=(a, b, c) =>
           Js.String.length(a) * b + c
         ),
       ),
