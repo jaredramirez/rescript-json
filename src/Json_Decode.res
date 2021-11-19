@@ -13,6 +13,10 @@ module Utils = {
     | Ok(v) => Ok(v)
     | Error(e) => Error(f(e))
     }
+
+  let resAndMap = (resF, resV) => {
+    resF->B.Result.flatMap(f => resV->B.Result.map(v => f(v)))
+  }
 }
 
 type value = J.t
@@ -107,6 +111,186 @@ let keyValuePairs: t<'a> => t<array<(string, 'a)>> = (Decoder(aDecoder)) => Deco
           }
         }
       }, Ok([]))),
+)
+
+let tuple2: (t<'a>, t<'b>) => t<('a, 'b)> = (Decoder(aDecoder), Decoder(bDecoder)) => Decoder(
+  j =>
+    j
+    ->J.decodeArray
+    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->B.Result.flatMap(arr =>
+      switch arr {
+      | [a, b] => Ok((a, b) => (a, b))->Utils.resAndMap(aDecoder(a))->Utils.resAndMap(bDecoder(b))
+      | _ => Error(Failure("an ARRAY with 2 elements", j))
+      }
+    ),
+)
+
+let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)> = (
+  Decoder(aDecoder),
+  Decoder(bDecoder),
+  Decoder(cDecoder),
+) => Decoder(
+  j =>
+    j
+    ->J.decodeArray
+    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->B.Result.flatMap(arr =>
+      switch arr {
+      | [a, b, c] =>
+        Ok((a, b, c) => (a, b, c))
+        ->Utils.resAndMap(aDecoder(a))
+        ->Utils.resAndMap(bDecoder(b))
+        ->Utils.resAndMap(cDecoder(c))
+
+      | _ => Error(Failure("an ARRAY with 3 elements", j))
+      }
+    ),
+)
+
+let tuple4: (t<'a>, t<'b>, t<'c>, t<'d>) => t<('a, 'b, 'c, 'd)> = (
+  Decoder(aDecoder),
+  Decoder(bDecoder),
+  Decoder(cDecoder),
+  Decoder(dDecoder),
+) => Decoder(
+  j =>
+    j
+    ->J.decodeArray
+    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->B.Result.flatMap(arr =>
+      switch arr {
+      | [a, b, c, d] =>
+        Ok((a, b, c, d) => (a, b, c, d))
+        ->Utils.resAndMap(aDecoder(a))
+        ->Utils.resAndMap(bDecoder(b))
+        ->Utils.resAndMap(cDecoder(c))
+        ->Utils.resAndMap(dDecoder(d))
+
+      | _ => Error(Failure("an ARRAY with 4 elements", j))
+      }
+    ),
+)
+
+let tuple5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>) => t<('a, 'b, 'c, 'd, 'e)> = (
+  Decoder(aDecoder),
+  Decoder(bDecoder),
+  Decoder(cDecoder),
+  Decoder(dDecoder),
+  Decoder(eDecoder),
+) => Decoder(
+  j =>
+    j
+    ->J.decodeArray
+    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->B.Result.flatMap(arr =>
+      switch arr {
+      | [a, b, c, d, e] =>
+        Ok((a, b, c, d, e) => (a, b, c, d, e))
+        ->Utils.resAndMap(aDecoder(a))
+        ->Utils.resAndMap(bDecoder(b))
+        ->Utils.resAndMap(cDecoder(c))
+        ->Utils.resAndMap(dDecoder(d))
+        ->Utils.resAndMap(eDecoder(e))
+      | _ => Error(Failure("an ARRAY with 5 elements", j))
+      }
+    ),
+)
+
+let tuple6: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>) => t<('a, 'b, 'c, 'd, 'e, 'f)> = (
+  Decoder(aDecoder),
+  Decoder(bDecoder),
+  Decoder(cDecoder),
+  Decoder(dDecoder),
+  Decoder(eDecoder),
+  Decoder(fDecoder),
+) => Decoder(
+  j =>
+    j
+    ->J.decodeArray
+    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->B.Result.flatMap(arr =>
+      switch arr {
+      | [a, b, c, d, e, f] =>
+        Ok((a, b, c, d, e, f) => (a, b, c, d, e, f))
+        ->Utils.resAndMap(aDecoder(a))
+        ->Utils.resAndMap(bDecoder(b))
+        ->Utils.resAndMap(cDecoder(c))
+        ->Utils.resAndMap(dDecoder(d))
+        ->Utils.resAndMap(eDecoder(e))
+        ->Utils.resAndMap(fDecoder(f))
+      | _ => Error(Failure("an ARRAY with 6 elements", j))
+      }
+    ),
+)
+
+let tuple7: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>, t<'g>) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g)> = (
+  Decoder(aDecoder),
+  Decoder(bDecoder),
+  Decoder(cDecoder),
+  Decoder(dDecoder),
+  Decoder(eDecoder),
+  Decoder(fDecoder),
+  Decoder(gDecoder),
+) => Decoder(
+  j =>
+    j
+    ->J.decodeArray
+    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->B.Result.flatMap(arr =>
+      switch arr {
+      | [a, b, c, d, e, f, g] =>
+        Ok((a, b, c, d, e, f, g) => (a, b, c, d, e, f, g))
+        ->Utils.resAndMap(aDecoder(a))
+        ->Utils.resAndMap(bDecoder(b))
+        ->Utils.resAndMap(cDecoder(c))
+        ->Utils.resAndMap(dDecoder(d))
+        ->Utils.resAndMap(eDecoder(e))
+        ->Utils.resAndMap(fDecoder(f))
+        ->Utils.resAndMap(gDecoder(g))
+      | _ => Error(Failure("an ARRAY with 7 elements", j))
+      }
+    ),
+)
+
+let tuple8: (
+  t<'a>,
+  t<'b>,
+  t<'c>,
+  t<'d>,
+  t<'e>,
+  t<'f>,
+  t<'g>,
+  t<'h>,
+) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)> = (
+  Decoder(aDecoder),
+  Decoder(bDecoder),
+  Decoder(cDecoder),
+  Decoder(dDecoder),
+  Decoder(eDecoder),
+  Decoder(fDecoder),
+  Decoder(gDecoder),
+  Decoder(hDecoder),
+) => Decoder(
+  j =>
+    j
+    ->J.decodeArray
+    ->Utils.optToRes(Failure("an ARRAY", j))
+    ->B.Result.flatMap(arr =>
+      switch arr {
+      | [a, b, c, d, e, f, g, h] =>
+        Ok((a, b, c, d, e, f, g, h) => (a, b, c, d, e, f, g, h))
+        ->Utils.resAndMap(aDecoder(a))
+        ->Utils.resAndMap(bDecoder(b))
+        ->Utils.resAndMap(cDecoder(c))
+        ->Utils.resAndMap(dDecoder(d))
+        ->Utils.resAndMap(eDecoder(e))
+        ->Utils.resAndMap(fDecoder(f))
+        ->Utils.resAndMap(gDecoder(g))
+        ->Utils.resAndMap(hDecoder(h))
+      | _ => Error(Failure("an ARRAY with 8 elements", j))
+      }
+    ),
 )
 
 // object primatives
@@ -207,10 +391,10 @@ let fromString: string => option<value> = s =>
   | _ => None
   }
 
-let decodeString: (t<'a>, string) => result<'a, error> = (Decoder(decoder), s) =>
+let decodeString: (string, t<'a>) => result<'a, error> = (s, Decoder(decoder)) =>
   s->fromString->Utils.optToRes(Failure("Invalid JSON", J.string(s)))->B.Result.flatMap(decoder)
 
-let decodeValue: (t<'a>, value) => result<'a, error> = (Decoder(decoder), j) => decoder(j)
+let decodeValue: (value, t<'a>) => result<'a, error> = (j, Decoder(decoder)) => decoder(j)
 
 // print errors
 

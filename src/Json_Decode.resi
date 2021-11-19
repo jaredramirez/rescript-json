@@ -26,6 +26,20 @@ let dict: t<'a> => t<Js.Dict.t<'a>>
 
 let keyValuePairs: t<'a> => t<array<(string, 'a)>> 
 
+let tuple2: (t<'a>, t<'b>) => t<('a, 'b)>
+
+let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)>
+
+let tuple4: (t<'a>, t<'b>, t<'c>, t<'d>) => t<('a, 'b, 'c, 'd)>
+
+let tuple5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>) => t<('a, 'b, 'c, 'd, 'e)>
+
+let tuple6: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>) => t<('a, 'b, 'c, 'd, 'e, 'f)>
+
+let tuple7: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>, t<'g>) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g)>
+
+let tuple8: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>, t<'g>, t<'h>) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)>
+
 // object primatives
 
 let field: (string, t<'a>) => t<'a> 
@@ -42,9 +56,9 @@ let oneOf: (t<'a>, array<t<'a>>) => t<'a>
 
 // run decoders
 
-let decodeString: (t<'a>, string) => result<'a, error> 
+let decodeString: (string, t<'a>) => result<'a, error> 
 
-let decodeValue: (t<'a>, value) => result<'a, error> 
+let decodeValue: (value, t<'a>) => result<'a, error> 
 
 let errorToString: error => string 
 

@@ -1,1 +1,3 @@
 lib/js/tests
+*.nix
+.direnv
