@@ -451,7 +451,7 @@ let rec errorToStringHelp = (error, context) =>
       | list{} => "Problem with the given value:\n\n"
       | reveresed => `Problem with the value at json${reveresed->joinList("")}:\n\n    `
       }
-      `${intro}${indent(Json_Encode.encode(j, 4))}\n\n${str}`
+      `${intro}${indent(Json__Encode.encode(j, 4))}\n\n${str}`
     }
   }
 

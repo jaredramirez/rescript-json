@@ -1,8 +1,13 @@
+.PHONY: dev build docs clean test start
+
 dev:
 	rescript build -with-deps -w
 	
 build:
 	rescript build -with-deps
+
+docs:
+	make build && rm -rf ./lib/bs/tests && bsdoc build RescriptJson
 
 clean:
 	rescript clean

@@ -1,5 +1,5 @@
 type value = Js.Json.t
 
-module Decode = Json_Decode
+module Decode = Json__Decode
 
-module Encode = Json_Encode
+module Encode = Json__Encode

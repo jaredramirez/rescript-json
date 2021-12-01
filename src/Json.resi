@@ -1,5 +1,8 @@
+@@ocaml.text("Represents a JavaScript value.")
 type value = Js.Json.t
 
-module Decode = Json_Decode
+@@ocaml.text("The Decode module. Accessed by [Json.Decode.*]")
+module Decode = Json__Decode
 
-module Encode = Json_Encode
+@@ocaml.text("The Encode module. Accessed by [Json.Encode.*]")
+module Encode = Json__Encode

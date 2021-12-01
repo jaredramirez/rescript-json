@@ -130,6 +130,11 @@ braces@^3.0.1, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
+bsdoc@^6.0.4-alpha:
+  version "6.0.4-alpha"
+  resolved "https://registry.yarnpkg.com/bsdoc/-/bsdoc-6.0.4-alpha.tgz#b6e02c8967d1503b1f3a21d448a9108e99a6db59"
+  integrity sha512-9m4MebWxv2gWHpg563CGJ1yPkpNpElKV7fPvjDhAw5VPjD0+EXX2S0Qx6UM/xmOOBmfJtp1YTvXfA9/UFd7aOg==
+
 cacheable-request@^6.0.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/cacheable-request/-/cacheable-request-6.1.0.tgz#20ffb8bd162ba4be11e9567d823db651052ca912"
