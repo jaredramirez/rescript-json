@@ -1,5 +1,7 @@
 {
   "name": "rescript-json",
+  "keywords": ["rescript", "json", "decode", "encode"],
+  "homepage": "TODO",
   "version": "0.0.3",
   "main": "index.js",
   "repository": "https://github.com/jaredramirez/rescript-json.git",
@@ -8,6 +10,7 @@
   "devDependencies": {
     "@dusty-phillips/rescript-zora": "^3.0.0",
     "bsdoc": "^6.0.4-alpha",
+    "chokidar-cli": "^3.0.0",
     "nodemon": "^2.0.15",
     "rescript": "^9.1.4",
     "zora": "^5.0.1"

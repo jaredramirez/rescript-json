@@ -300,7 +300,7 @@ let tuple8: (
 
 // object primatives
 
-let fieldHelp = (j, key) =>
+let rec fieldHelp = (j, key) =>
   j
   ->J.decodeObject
   ->Utils.optToRes(Failure(`Expecting an OBJECT with a field named '${key}'`, j))
@@ -309,25 +309,22 @@ let fieldHelp = (j, key) =>
     ->Js.Dict.get(key)
     ->Utils.optToRes(Failure(`Expecting an OBJECT with a field named '${key}'`, j))
   )
-
-let field: (string, t<'a>) => t<'a> = (key, Decoder(aDecoder)) => Decoder(
+and field: (string, t<'a>) => t<'a> = (key, Decoder(aDecoder)) => Decoder(
   j =>
     j->fieldHelp(key)->B.Result.flatMap(jv => aDecoder(jv)->Utils.resMapError(e => Field(key, e))),
 )
 
-let at: (string, array<string>, t<'a>) => t<'a> = (firstKey, keys, Decoder(aDecoder)) => Decoder(
-  j => {
-    keys->Js.Array2.reduce((acc, cur) => {
-      switch acc {
-      | Error(_) => acc
-      | Ok(sj, _) => fieldHelp(sj, cur)->B.Result.map(ssj => (ssj, cur))
-      }
-    }, fieldHelp(j, firstKey)->B.Result.map(ssj => (
-      ssj,
-      firstKey,
-    )))->B.Result.flatMap(((jv, key)) => aDecoder(jv)->Utils.resMapError(e => Field(key, e)))
-  },
-)
+let rec atHelp: (string, list<string>, t<'a>) => t<'a> = (firstKey, keys, decoder) => {
+  field(
+    firstKey,
+    switch keys {
+    | list{} => decoder
+    | list{nextKey, ...restKeys} => atHelp(nextKey, restKeys, decoder)
+    },
+  )
+}
+and at: (string, array<string>, t<'a>) => t<'a> = (firstKey, keys, decoder) =>
+  atHelp(firstKey, Belt.List.fromArray(keys), decoder)
 
 let index: (int, t<'a>) => t<'a> = (index, Decoder(aDecoder)) => Decoder(
   j =>
@@ -393,10 +390,10 @@ let fromString: string => option<value> = s =>
   | _ => None
   }
 
-let decodeString: (string, t<'a>) => result<'a, error> = (s, Decoder(decoder)) =>
+let decodeString: (t<'a>, string) => result<'a, error> = (Decoder(decoder), s) =>
   s->fromString->Utils.optToRes(Failure("Invalid JSON", J.string(s)))->B.Result.flatMap(decoder)
 
-let decodeValue: (value, t<'a>) => result<'a, error> = (j, Decoder(decoder)) => decoder(j)
+let decodeValue: (t<'a>, value) => result<'a, error> = (Decoder(decoder), j) => decoder(j)
 
 // print errors
 

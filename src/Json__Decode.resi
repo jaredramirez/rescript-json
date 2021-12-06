@@ -5,32 +5,31 @@ type t<'a>
 
 @@ocaml.text("{2:primatives Primatives}")
 
-@@ocaml.text("{3:string string}")
-let string: t<string> 
+let string: t<string>
 @@ocaml.text("
 Decode a JSON string into a Rescript [string].
 
 {[
-  decodeString(string, \"true\")              == Error(...)
-  decodeString(string, \"42\")                == Error(...)
-  decodeString(string, \"3.14\")              == Error(...)
-  decodeString(string, \"\\\"hello\\\"\")         == Ok(\"hello\")
-  decodeString(string, \"{ \\\"hello\\\": 42 }\") == Error(...)
+  decodeString(string, \"true\")               == Error(...)
+  decodeString(string, \"42\")                 == Error(...)
+  decodeString(string, \"3.14\")               == Error(...)
+  decodeString(string, \"\\\"hello\\\"\")          == Ok(\"hello\")
+  decodeString(string, \"{ \\\"hello\\\": 42 }\")  == Error(...)
 ]}")
 
-let bool: t<bool> 
+let bool: t<bool>
 @@ocaml.text("
 Decode a JSON bool into a Rescript [bool].
 
 {[
-  decodeString(bool, \"true\")              == Ok(true)
-  decodeString(bool, \"42\")                == Error(...)
-  decodeString(bool, \"3.14\")              == Error(...)
-  decodeString(bool, \"\\\"hello\\\"\")         == Error(...)
-  decodeString(bool, \"{ \\\"hello\\\": 42 }\") == Error(...)
+  decodeString(bool, \"true\")                == Ok(true)
+  decodeString(bool, \"42\")                  == Error(...)
+  decodeString(bool, \"3.14\")                == Error(...)
+  decodeString(bool, \"\\\"hello\\\"\")           == Error(...)
+  decodeString(bool, \"{ \\\"hello\\\": 42 }\")   == Error(...)
 ]}")
 
-let int: t<int> 
+let int: t<int>
 @@ocaml.text("
 Decode a JSON int into a Rescript [int].
 
@@ -42,7 +41,7 @@ Decode a JSON int into a Rescript [int].
   decodeString(int, \"{ \\\"hello\\\": 42 }\") == Error(...)
 ]}")
 
-let float: t<float> 
+let float: t<float>
 @@ocaml.text("
 Decode a JSON float into a Rescript [float].
 
@@ -56,7 +55,7 @@ Decode a JSON float into a Rescript [float].
 
 @@ocaml.text("{2:data-structures Data Structures}")
 
-let nullable: t<'a> => t<option<'a>> 
+let nullable: t<'a> => t<option<'a>>
 @@ocaml.text("
 Decode a nullable JSON value into a Rescript value.
 
@@ -67,7 +66,7 @@ Decode a nullable JSON value into a Rescript value.
   decodeString(nullable(int), \"true\") == Error(...)
 ]}")
 
-let array: t<'a> => t<array<'a>> 
+let array: t<'a> => t<array<'a>>
 @@ocaml.text("
 Decode a JSON value into a Rescript [array].
 
@@ -85,7 +84,7 @@ Decode a JSON value into a Rescript [list].
   decodeString(list(bool), \"[true,false]\") == Ok(list{true, false})
 ]}")
 
-let dict: t<'a> => t<Js.Dict.t<'a>> 
+let dict: t<'a> => t<Js.Dict.t<'a>>
 @@ocaml.text("
 Decode a JSON value into a Rescript [Js.Dict.t].
 
@@ -94,7 +93,7 @@ Decode a JSON value into a Rescript [Js.Dict.t].
     == Ok(Js.Dict.fromArray([(\"alice\", 42), (\"bob\", 99)]))
 ]}")
 
-let keyValuePairs: t<'a> => t<array<(string, 'a)>> 
+let keyValuePairs: t<'a> => t<array<(string, 'a)>>
 @@ocaml.text("
 Decode a JSON value into a Rescript [array] of pair.
 
@@ -103,99 +102,215 @@ Decode a JSON value into a Rescript [array] of pair.
     == Ok([(\"alice\", 42), (\"bob\", 99)])
 ]}")
 
-
-@@ocaml.text("{3:tuples Tuples}
-
-Decode a JSON value into a Rescript tuple with 2 through 8 elements. This is helpful if you're dealing with a heterogeneous JSON array, like [[1, \"hey\"]]. {b Modeling your JSON like this is generally a bad idea.} Unfortunatly, we often have to use JSON from places outside our control, hence these functions.
-
-From [tuples4-8], the use looks just like the examples for [tuple2] and [tuple3]
-")
-
-@@ocaml.text("")
 let tuple2: (t<'a>, t<'b>) => t<('a, 'b)>
 @@ocaml.text("
 Decode a JSON value into a Rescript tuple with 2 elements.
 
+This is helpful if you're dealing with a heterogeneous JSON array, like [[1, \"hey\"]]. {e Modeling your JSON like this is generally a bad idea.} Unfortunatly, we sometimes have to use JSON/JavaScript from places outside our control, hence these functions.
+
 {[
   decodeString(tuple2(int, string), \"[1, \\\"hey\\\"]\") == Ok((1, \"hey\"))
-]}")
+]}
 
-@@ocaml.text("")
+From [tuple3]-[tuple8], the use looks just like the examples for [tuple2] just with more elements & decoders.
+")
+
 let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)>
-@@ocaml.text("
-Decode a JSON value into a Rescript tuple with 3 elements.
 
-{[
-  decodeString(tuple3(int, string, bool), \"[1, \\\"hey\\\", bool]\") == Ok((1, \"hey\", true))
-]}")
-
-@@ocaml.text("")
 let tuple4: (t<'a>, t<'b>, t<'c>, t<'d>) => t<('a, 'b, 'c, 'd)>
 
-@@ocaml.text("")
 let tuple5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>) => t<('a, 'b, 'c, 'd, 'e)>
 
-@@ocaml.text("")
 let tuple6: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>) => t<('a, 'b, 'c, 'd, 'e, 'f)>
 
-@@ocaml.text("")
 let tuple7: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>, t<'g>) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g)>
 
-@@ocaml.text("")
-let tuple8: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, t<'f>, t<'g>, t<'h>) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)>
+let tuple8: (
+  t<'a>,
+  t<'b>,
+  t<'c>,
+  t<'d>,
+  t<'e>,
+  t<'f>,
+  t<'g>,
+  t<'h>,
+) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)>
 
 @@ocaml.text("{2:obj-primatives Object Primatives}")
 
-@@ocaml.text("")
-let field: (string, t<'a>) => t<'a> 
+let field: (string, t<'a>) => t<'a>
+@@ocaml.text("
+Decode a JSON object, requiring a particular field.
+
+{[
+  field(\"x\", int)->decodeString(\"{ \\\"x\\\": 42 }\")            == Ok(42)
+  field(\"x\", int)->decodeString(\"{ \\\"x\\\": 42, \\\"y\\\": 50 }\") == Ok(42)
+  field(\"x\", int)->decodeString(\"{ \\\"x\\\": true }\")          == Error(...)
+  field(\"x\", int)->decodeString(\"{ \\\"y\\\": 50 }\")            == Error(...)
+]}
+
+The object {e can} have other fields. Lots of them! The only thing this decoder cares about is if [x] is present and that the value there is an [int].
+
+Check out {! map2} to see how to decode multiple fields!
+")
 
 @@ocaml.text("")
-let at: (string, array<string>, t<'a>) => t<'a> 
+let at: (string, array<string>, t<'a>) => t<'a>
+@@ocaml.text("
+Decode a nested JSON object, requiring certain fields.
+
+{[
+  let json = \"{ \\\"person\\\": { \\\"name\\\": \\\"Maria\\\", \\\"age\\\": 24 } }\"
+
+  at([\"person\", \"name\"], string)->decodeString(json) == Ok(\"Maria\")
+  at([\"person\", \"age\" ], int   )->decodeString(json) == Ok(24)
+]}
+
+This is really just a shorthand for saying things like:
+{[
+  field(\"person\", field(\"name\"), string)) == at([\"person\", \"name\"], string)
+]}
+")
 
 @@ocaml.text("")
-let index: (int, t<'a>) => t<'a> 
+let index: (int, t<'a>) => t<'a>
+@@ocaml.text("
+Decode a nested JSON object, requiring a certain index.
+
+{[
+  let json = \"[ \\\"Maria\\\", \\\"Caleb\\\", \\\"Sofia\\\" ]\"
+
+  index(0, string)->decodeString(json) == Ok(\"Maria\")
+  index(2, string)->decodeString(json) == Ok(\"Sofia\")
+]}
+")
 
 @@ocaml.text("{2:inconsisent-structur Inconsistent Structure}")
 
-@@ocaml.text("")
-let option: t<'a> => t<option<'a>> 
+let option: t<'a> => t<option<'a>>
+@@ocaml.text("
+Helpful for dealing with optional fields. Here are a few slightly different examples:
 
-@@ocaml.text("")
-let oneOf: (t<'a>, array<t<'a>>) => t<'a> 
+{[
+  let json = \"{ \\\"name\\\": \\\"Maria\\\", \\\"age\\\": 24 }\"
+
+  option(field(\"age\",    int  ))->decodeString(json) == Ok(Some(24))
+  option(field(\"name\",   int  ))->decodeString(json) == Ok(None)
+  option(field(\"height\", float))->decodeString(json) == Ok(None)
+
+  field(\"age\",    option(int  ))->decodeString(json) == Ok(Some(24))
+  field(\"name\",   option(int  ))->decodeString(json) == Ok(None)
+  field(\"height\", option(float))->decodeString(json) == Error(...)
+]}
+
+Notice the last example! It is saying we {e must} have a field named [height] and the content {e may} be a [float]. There is no [height] field, so the decoder fails.
+
+Point is, [option] will make exactly what it contains conditional. For optional fields, this means you probably want it {e outside} a use of [field] or [at].
+")
+
+let oneOf: (t<'a>, array<t<'a>>) => t<'a>
+@@ocaml.text("
+Try a bunch of different decoders. This can be useful if the JSON may come in a couple different formats. For example, say you want to read an array of numbers, but some of them are [null].
+
+{[
+  let badIntDecoder: t<int> =
+    oneOf(
+      int, // the first decoder to try
+      [null(0)] // the other decoders to try
+    )
+
+  decodeString(badIntDecoder, \"[1,2,null,4]\") == Ok([1, 2, 0, 4])
+]}
+
+Why would someone generate JSON like this? Questions like this are not good for your health. Point is, that you can use [oneOf] to handle situations like this!
+
+You could also use [oneOf] to help version your data. Try the latest format, then a few older ones that you still support. You could use {! andThen} to be even more particular if you wanted.
+")
 
 @@ocaml.text("{2:run-decoders Run Decoders}")
-
-type error 
-@@ocaml.text("A structured error describing exactly how the decoder failed. You can use this to create more elaborate visualizations of a decoder problem. For example, you could show the entire JSON object and show the part causing the failure in red.")
-
-@@ocaml.text("")
-let decodeString: (string, t<'a>) => result<'a, error> 
 
 type value = Js.Json.t
 @@ocaml.text("Represents a JavaScript value.")
 
-@@ocaml.text("")
-let decodeValue: (value, t<'a>) => result<'a, error> 
+type rec error =
+  | Failure(string, value)
+  | Index(int, error)
+  | Field(string, error)
+  | OneOf(error, array<error>)
+@@ocaml.text(
+  "A structured error describing exactly how the decoder failed. You can use this to create more elaborate visualizations of a decoder problem. For example, you could show the entire JSON object and show the part causing the failure in red."
+)
 
-@@ocaml.text("")
-let errorToString: error => string 
+let decodeString: (t<'a>, string) => result<'a, error>
+@@ocaml.text("
+Parse the given string into a JSON value and then run the decoder on it. This will fail if the string is not well-formed JSON or if the Decoder fails for some reason.
+
+{[
+  decodeString(int, \"1\")    == Ok(1)
+  decodeString(int, \"1 + 2\") == Error(...)
+]}
+
+")
+
+let decodeValue: (t<'a>, value) => result<'a, error>
+@@ocaml.text("
+Run a decoder on some JSON `value`. This is helpful if you want to bring in some JavaScript value as a `value`, then run a decoder on it.
+
+{[
+  @module(\"my-func\")
+  external getUser: unit => value = \"default\"
+
+  let firstNameDecoder: t<string> =
+    oneOf(
+      field(\"firstName\", string),
+      [
+        field(\"first_name\", string),
+        field(\"first-name\", string),
+      ]
+    )
+
+  let myFunc = () => {
+    let val = getUser()
+    decodeValue(firstNameDecoder, val)
+  }
+]}
+
+")
+
+let errorToString: error => string
+@@ocaml.text("
+Convert a decoding error into a [string] that is nice for debugging. The output of this function produces a multi-line string.
+
+For example, the following decoder
+{[
+  at(\"a\", [\"b\"], int)->decodeS`tring(`{ \"a\": { \"b\": \"hey\" } }`)
+]}
+produces
+{v
+Problem with the value at json[\"a\"][\"b\"]:
+
+\"hey\"
+
+Expecting an INT
+v}
+")
 
 @@ocaml.text("{2:combine Combine}")
 
 @@ocaml.text("")
-let map: (t<'a>, ~f: 'a => 'b) => t<'b> 
+let map: (t<'a>, ~f: 'a => 'b) => t<'b>
 
 @@ocaml.text("")
-let map2: (t<'a>, t<'b>, ~f: ('a, 'b) => 'c) => t<'c> 
+let map2: (t<'a>, t<'b>, ~f: ('a, 'b) => 'c) => t<'c>
 
 @@ocaml.text("")
-let map3: (t<'a>, t<'b>, t<'c>, ~f: ('a, 'b, 'c) => 'val) => t<'val> 
+let map3: (t<'a>, t<'b>, t<'c>, ~f: ('a, 'b, 'c) => 'val) => t<'val>
 
 @@ocaml.text("")
-let map4: (t<'a>, t<'b>, t<'c>, t<'d>, ~f: ('a, 'b, 'c, 'd) => 'val) => t<'val> 
+let map4: (t<'a>, t<'b>, t<'c>, t<'d>, ~f: ('a, 'b, 'c, 'd) => 'val) => t<'val>
 
 @@ocaml.text("")
-let map5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, ~f: ('a, 'b, 'c, 'd, 'e) => 'val) => t<'val> 
+let map5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, ~f: ('a, 'b, 'c, 'd, 'e) => 'val) => t<'val>
 
 @@ocaml.text("")
 let map6: (
@@ -206,7 +321,7 @@ let map6: (
   t<'e>,
   t<'f>,
   ~f: ('a, 'b, 'c, 'd, 'e, 'f) => 'val,
-) => t<'val> 
+) => t<'val>
 
 @@ocaml.text("")
 let map7: (
@@ -218,7 +333,7 @@ let map7: (
   t<'f>,
   t<'g>,
   ~f: ('a, 'b, 'c, 'd, 'e, 'f, 'g) => 'val,
-) => t<'val> 
+) => t<'val>
 
 @@ocaml.text("")
 let map8: (
@@ -231,25 +346,24 @@ let map8: (
   t<'g>,
   t<'h>,
   ~f: ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h) => 'val,
-) => t<'val> 
+) => t<'val>
 
 @@ocaml.text("")
-let andMap: (t<'a => 'b>, t<'a>) => t<'b> 
+let andMap: (t<'a => 'b>, t<'a>) => t<'b>
 
 @@ocaml.text("{2:fancy Fancy}")
 
 @@ocaml.text("")
-let null: 'a => t<'a> 
+let null: 'a => t<'a>
 
 @@ocaml.text("")
-let value: t<value> 
+let value: t<value>
 
 @@ocaml.text("")
-let andThen: (t<'a>, ~f: 'a => t<'b>) => t<'b> 
+let andThen: (t<'a>, ~f: 'a => t<'b>) => t<'b>
 
 @@ocaml.text("")
-let succeed: 'a => t<'a> 
+let succeed: 'a => t<'a>
 
 @@ocaml.text("")
-let fail: string => t<'a> 
-
+let fail: string => t<'a>
