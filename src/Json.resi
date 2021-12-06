@@ -48,7 +48,7 @@ The table is interesting, but say we want to visualize this data in a nicer way.
   }
 ]}
 
-Now in some other code we can use Cause.encode and Cause.decoder as building blocks. So if we want to decode a list of causes, saying Decode.list Cause.decoder will handle it!
+Now in some other code we can use Cause.encode and Cause.decoder as building blocks. So if we want to decode a list of causes, saying [Json.Decode.array(Cause.decoder)] will handle it!
 
 Point is, the goal should be:
 

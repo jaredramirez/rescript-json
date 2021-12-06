@@ -10,48 +10,52 @@ let string: t<string>
 Decode a JSON string into a Rescript [string].
 
 {[
-  decodeString(string, \"true\")               == Error(...)
-  decodeString(string, \"42\")                 == Error(...)
-  decodeString(string, \"3.14\")               == Error(...)
-  decodeString(string, \"\\\"hello\\\"\")          == Ok(\"hello\")
-  decodeString(string, \"{ \\\"hello\\\": 42 }\")  == Error(...)
-]}")
+  decodeString(\"true\", string)               == Error(...)
+  decodeString(\"42\", string)                 == Error(...)
+  decodeString(\"3.14\", string)               == Error(...)
+  decodeString(\"\\\"hello\\\"\", string)          == Ok(\"hello\")
+  decodeString(\"{ \\\"hello\\\": 42 }\", string)  == Error(...)
+]}
+")
 
 let bool: t<bool>
 @@ocaml.text("
 Decode a JSON bool into a Rescript [bool].
 
 {[
-  decodeString(bool, \"true\")                == Ok(true)
-  decodeString(bool, \"42\")                  == Error(...)
-  decodeString(bool, \"3.14\")                == Error(...)
-  decodeString(bool, \"\\\"hello\\\"\")           == Error(...)
-  decodeString(bool, \"{ \\\"hello\\\": 42 }\")   == Error(...)
-]}")
+  decodeString(\"true\", bool)                == Ok(true)
+  decodeString(\"42\", bool)                  == Error(...)
+  decodeString(\"3.14\", bool)                == Error(...)
+  decodeString(\"\\\"hello\\\"\", bool)           == Error(...)
+  decodeString(\"{ \\\"hello\\\": 42 }\", bool)   == Error(...)
+]}
+")
 
 let int: t<int>
 @@ocaml.text("
 Decode a JSON int into a Rescript [int].
 
 {[
-  decodeString(int, \"true\")              == Error(...)
-  decodeString(int, \"42\")                == Ok(42)
-  decodeString(int, \"3.14\")              == Error(...)
-  decodeString(int, \"\\\"hello\\\"\")         == Error(...)
-  decodeString(int, \"{ \\\"hello\\\": 42 }\") == Error(...)
-]}")
+  decodeString(\"true\", int)              == Error(...)
+  decodeString(\"42\", int)                == Ok(42)
+  decodeString(\"3.14\", int)              == Error(...)
+  decodeString(\"\\\"hello\\\"\", int)         == Error(...)
+  decodeString(\"{ \\\"hello\\\": 42 }\", int) == Error(...)
+]}
+")
 
 let float: t<float>
 @@ocaml.text("
 Decode a JSON float into a Rescript [float].
 
 {[
-  decodeString(float, \"true\")              == Error(...)
-  decodeString(float, \"42\")                == Error(...)
-  decodeString(float, \"3.14\")              == Ok(3.14)
-  decodeString(float, \"\\\"hello\\\"\")         == Error(...)
-  decodeString(float, \"{ \\\"hello\\\": 42 }\") == Error(...)
-]}")
+  decodeString(\"true\", float)              == Error(...)
+  decodeString(\"42\", float)                == Error(...)
+  decodeString(\"3.14\", float)              == Ok(3.14)
+  decodeString(\"\\\"hello\\\"\", float)         == Error(...)
+  decodeString(\"{ \\\"hello\\\": 42 }\", float) == Error(...)
+]}
+")
 
 @@ocaml.text("{1:data-structures Data Structures}")
 
@@ -60,47 +64,52 @@ let nullable: t<'a> => t<option<'a>>
 Decode a nullable JSON value into a Rescript value.
 
 {[
-  decodeString(nullable(int), \"13\")   == Ok(Some(13))
-  decodeString(nullable(int), \"42\")   == Ok(Some(42))
-  decodeString(nullable(int), \"null\") == Ok(None)
-  decodeString(nullable(int), \"true\") == Error(...)
-]}")
+  decodeString(\"13\", nullable(int))   == Ok(Some(13))
+  decodeString(\"42\", nullable(int))   == Ok(Some(42))
+  decodeString(\"null\", nullable(int)) == Ok(None)
+  decodeString(\"true\", nullable(int)) == Error(...)
+]}
+")
 
 let array: t<'a> => t<array<'a>>
 @@ocaml.text("
 Decode a JSON value into a Rescript [array].
 
 {[
-  decodeString(array(int), \"[1,2,3]\")       == Ok([1, 2, 3])
-  decodeString(array(bool), \"[true,false]\") == Ok([true, false])
-]}")
+  decodeString(\"[1,2,3]\", array(int))      == Ok([1, 2, 3])
+  decodeString(\"[true,false]\", array(int)) == Ok([true, false])
+]}
+")
 
 let list: t<'a> => t<list<'a>>
 @@ocaml.text("
 Decode a JSON value into a Rescript [list].
 
 {[
-  decodeString(list(int), \"[1,2,3]\")       == Ok(list{1, 2, 3})
-  decodeString(list(bool), \"[true,false]\") == Ok(list{true, false})
-]}")
+  decodeString(\"[1,2,3]\", list(int))      == Ok(list{1, 2, 3})
+  decodeString(\"[true,false]\", list(int)) == Ok(list{true, false})
+]}
+")
 
 let dict: t<'a> => t<Js.Dict.t<'a>>
 @@ocaml.text("
 Decode a JSON value into a Rescript [Js.Dict.t].
 
 {[
-  decodeString(dict(int), \"{ \\\"alice\\\": 42, \\\"bob\\\": 99 }\")
+  decodeString(\"{ \\\"alice\\\": 42, \\\"bob\\\": 99 }\", dict(int))
     == Ok(Js.Dict.fromArray([(\"alice\", 42), (\"bob\", 99)]))
-]}")
+]}
+")
 
 let keyValuePairs: t<'a> => t<array<(string, 'a)>>
 @@ocaml.text("
 Decode a JSON value into a Rescript [array] of pair.
 
 {[
-  decodeString(dict(int), \"{ \\\"alice\\\": 42, \\\"bob\\\": 99 }\")
+  decodeString(\"{ \\\"alice\\\": 42, \\\"bob\\\": 99 }\", keyValuePairs(int))
     == Ok([(\"alice\", 42), (\"bob\", 99)])
-]}")
+]}
+")
 
 let tuple2: (t<'a>, t<'b>) => t<('a, 'b)>
 @@ocaml.text("
@@ -109,15 +118,24 @@ Decode a JSON value into a Rescript tuple with 2 elements.
 This is helpful if you're dealing with a heterogeneous JSON array, like [[1, \"hey\"]]. {e Modeling your JSON like this is generally a bad idea.} Unfortunatly, we sometimes have to use JSON/JavaScript from places outside our control, hence these functions.
 
 {[
-  decodeString(tuple2(int, string), \"[1, \\\"hey\\\"]\") == Ok((1, \"hey\"))
+  decodeString(\"[1, \\\"hey\\\"]\", tuple2(int, string)) == Ok((1, \"hey\"))
+    == Ok((1, \"hey\"))
+]}
+")
+
+let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)>
+@@ocaml.text("
+Decode a JSON value into a Rescript tuple with 3 elements.
+
+{[
+  decodeString(\"[1, 8.0, \\\"hey\\\"]\", tuple3(int, float, string)) == Ok((1, \"hey\"))
+    == Ok((1, 8., \"hey\"))
 ]}
 ")
 
 @@ocaml.text(
-  "For {! tuple3}-{! tuple8}, the use looks just like the examples for [tuple2] just with more elements & decoders."
+  "For {! tuple4}-{! tuple8}, using it is just like the examples for [tuple2] and [tuple3] only with more elements & decoders."
 )
-
-let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)>
 
 let tuple4: (t<'a>, t<'b>, t<'c>, t<'d>) => t<('a, 'b, 'c, 'd)>
 
@@ -145,11 +163,12 @@ let field: (string, t<'a>) => t<'a>
 Decode a JSON object, requiring a particular field.
 
 {[
-  field(\"x\", int)->decodeString(\"{ \\\"x\\\": 42 }\")            == Ok(42)
-  field(\"x\", int)->decodeString(\"{ \\\"x\\\": 42, \\\"y\\\": 50 }\") == Ok(42)
-  field(\"x\", int)->decodeString(\"{ \\\"x\\\": true }\")          == Error(...)
-  field(\"x\", int)->decodeString(\"{ \\\"y\\\": 50 }\")            == Error(...)
+  decodeString(\"{ \\\"x\\\": 42 }\",             field(\"x\", int))== Ok(42)
+  decodeString(\"{ \\\"x\\\": 42, \\\"y\\\": 50 }\",  field(\"x\", int))== Ok(42)
+  decodeString(\"{ \\\"x\\\": true }\",           field(\"x\", int))== Error(...)
+  decodeString(\"{ \\\"y\\\": 50 }\",             field(\"x\", int))== Error(...)
 ]}
+
 
 The object {e can} have other fields. Lots of them! The only thing this decoder cares about is if [x] is present and that the value there is an [int].
 
@@ -163,8 +182,8 @@ Decode a nested JSON object, requiring certain fields.
 {[
   let json = \"{ \\\"person\\\": { \\\"name\\\": \\\"Maria\\\", \\\"age\\\": 24 } }\"
 
-  at([\"person\", \"name\"], string)->decodeString(json) == Ok(\"Maria\")
-  at([\"person\", \"age\" ], int   )->decodeString(json) == Ok(24)
+  decodeString(json, at([\"person\", \"name\"], string)) == Ok(\"Maria\")
+  decodeString(json, at([\"person\", \"age\" ], int   )) == Ok(24)
 ]}
 
 This is really just a shorthand for saying things like:
@@ -180,8 +199,8 @@ Decode a nested JSON object, requiring a certain index.
 {[
   let json = \"[ \\\"Maria\\\", \\\"Caleb\\\", \\\"Sofia\\\" ]\"
 
-  index(0, string)->decodeString(json) == Ok(\"Maria\")
-  index(2, string)->decodeString(json) == Ok(\"Sofia\")
+  decodeString(json, index(0, string)) == Ok(\"Maria\")
+  decodeString(json, index(2, string)) == Ok(\"Sofia\")
 ]}
 ")
 
@@ -194,14 +213,15 @@ Helpful for dealing with optional fields. Here are a few slightly different exam
 {[
   let json = \"{ \\\"name\\\": \\\"Maria\\\", \\\"age\\\": 24 }\"
 
-  option(field(\"age\",    int  ))->decodeString(json) == Ok(Some(24))
-  option(field(\"name\",   int  ))->decodeString(json) == Ok(None)
-  option(field(\"height\", float))->decodeString(json) == Ok(None)
+  decodeString(json, option(field(\"age\",    int  ))) == Ok(Some(24))
+  decodeString(json, option(field(\"name\",   int  ))) == Ok(None)
+  decodeString(json, option(field(\"height\", float))) == Ok(None)
 
-  field(\"age\",    option(int  ))->decodeString(json) == Ok(Some(24))
-  field(\"name\",   option(int  ))->decodeString(json) == Ok(None)
-  field(\"height\", option(float))->decodeString(json) == Error(...)
+  decodeString(json, field(\"height\", option(float))) == Ok(Some(24))
+  decodeString(json, field(\"height\", option(float))) == Ok(None)
+  decodeString(json, field(\"height\", option(float))) == Error(...)
 ]}
+
 
 Notice the last example! It is saying we {e must} have a field named [height] and the content {e may} be a [float]. There is no [height] field, so the decoder fails.
 
@@ -219,7 +239,7 @@ Try a bunch of different decoders. This can be useful if the JSON may come in a 
       [null(0)] // the other decoders to try
     )
 
-  decodeString(badIntDecoder, \"[1,2,null,4]\") == Ok([1, 2, 0, 4])
+  decodeString(\"[1,2,null,4]\", badIntDecoder) == Ok([1, 2, 0, 4])
 ]}
 
 Why would someone generate JSON like this? Questions like this are not good for your health. Point is, that you can use [oneOf] to handle situations like this!
@@ -241,18 +261,17 @@ type rec error =
   "A structured error describing exactly how the decoder failed. You can use this to create more elaborate visualizations of a decoder problem. For example, you could show the entire JSON object and show the part causing the failure in red."
 )
 
-let decodeString: (t<'a>, string) => result<'a, error>
+let decodeString: (string, t<'a>) => result<'a, error>
 @@ocaml.text("
 Parse the given string into a JSON value and then run the decoder on it. This will fail if the string is not well-formed JSON or if the Decoder fails for some reason.
 
 {[
-  decodeString(int, \"1\")    == Ok(1)
-  decodeString(int, \"1 + 2\") == Error(...)
+  decodeString(\"1\", int)     == Ok(1)
+  decodeString(\"1 + 2\", int) == Error(...)
 ]}
-
 ")
 
-let decodeValue: (t<'a>, value) => result<'a, error>
+let decodeValue: (value, t<'a>) => result<'a, error>
 @@ocaml.text("
 Run a decoder on some JSON `value`. This is helpful if you want to bring in some JavaScript value as a `value`, then run a decoder on it.
 
@@ -270,8 +289,8 @@ Run a decoder on some JSON `value`. This is helpful if you want to bring in some
     )
 
   let myFunc = () => {
-    let val = getUser()
-    decodeValue(firstNameDecoder, val)
+    getUser()
+      ->decodeValue(firstNameDecoder)
   }
 ]}
 
@@ -283,7 +302,7 @@ Convert a decoding error into a [string] that is nice for debugging. The output 
 
 For example, the following decoder
 {[
-  at(\"a\", [\"b\"], int)->decodeString(`{ \"a\": { \"b\": \"hey\" } }`)
+  decodeString(`{ \"a\": { \"b\": \"hey\" } }`, at(\"a\", [\"b\"], int))
 ]}
 produces
 {v
@@ -336,7 +355,8 @@ Try two decoders and then combine the result. We can use this to decode objects 
       ~f=(x, y) => { x: x, y: y })
     )
 
-  decodeString(pointDecoder, \"{ \\\"x\\\": 2, \\\"y\\\": 5 }\") == Ok({ x: 2, y: 5 })
+  let json = \"{ \\\"x\\\": 2, \\\"y\\\": 5 }\"
+  decodeString(json, pointDecoder) == Ok({ x: 2, y: 5 })
 ]}
 
 It tries each individual decoder and puts the result together with in the [~f] function.
@@ -357,7 +377,8 @@ Try three decoders and then combine the result. We can use this to decode object
       ~f=(name, age, height) => { name: name, age: age, height: height })
     )
 
-  decodeString(pointDecoder, \"{ \\\"name\\\": \"Maria\", \\\"info\\\": { \\\"age\\\": 28, \\\"height\\\": 1.5 } }\")
+  let json = \"{ \\\"name\\\": \"Maria\", \\\"info\\\": { \\\"age\\\": 28, \\\"height\\\": 1.5 } }\"
+  decodeString(json, pointDecoder)
     == Ok({ name: \"Maria\", age: 28, height: 1.5 })
 ]}
 
@@ -365,7 +386,7 @@ It tries each individual decoder and puts the result together with in the [~f] f
 ")
 
 @@ocaml.text(
-  "For {! map4}-{! map8}, the use looks just like the examples for {! map2} and {! map3} just with more elements & decoders."
+  "For {! map4}-{! map8}, using it is just like the examples for {! map2} and {! map3} only with more elements & decoders."
 )
 
 let map4: (t<'a>, t<'b>, t<'c>, t<'d>, ~f: ('a, 'b, 'c, 'd) => 'val) => t<'val>
@@ -418,10 +439,10 @@ let null: 'a => t<'a>
 Decode a JSON string into some Rescript value.
 
 {[
-  decodeString(null(false), \"null\") == Ok(false)
-  decodeString(null(42), \"null\")    == Ok(42)
-  decodeString(null(42), \"42\")      == Error(...)
-  decodeString(null(42), \"false\")   == Error(...)
+  decodeString(\"null\", null(false)) == Ok(false)
+  decodeString(\"null\", null(42))    == Ok(42)
+  decodeString(\"42\", null(42))      == Error(...)
+  decodeString(\"false\", null(42))   == Error(...)
 ]}
 ")
 
@@ -430,9 +451,9 @@ let succeed: 'a => t<'a>
 Ignore the JSON and produce a certain Elm value.
 
 {[
-  decodeString(succeed(42), \"true\")    == Ok(42)
-  decodeString(succeed(42), \"[1,2,3]\") == Ok(42)
-  decodeString(succeed(42), \"hello\")   == Error(...) // \"hello\" is not a valid JSON string, so this fails
+  decodeString(\"true\", succeed(42))    == Ok(42)
+  decodeString(\"[1,2,3]\", succeed(42)) == Ok(42)
+  decodeString(\"hello\", succeed(42))   == Error(...) // \"hello\" is not a valid JSON string, so this fails
 ]}
 ")
 

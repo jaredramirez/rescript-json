@@ -4,47 +4,47 @@ zora("decode tests", t => {
   open! Json.Decode
 
   t->test("should decode a string", t => {
-    t->equal(decodeString(string, `"value"`), Ok("value"), "Should equal")
+    t->equal(`"value"`->decodeString(string), Ok("value"), "Should equal")
     done()
   })
 
   t->test("should decode an int", t => {
-    t->equal(decodeString(int, `1`), Ok(1), "Should equal")
+    t->equal(`1`->decodeString(int), Ok(1), "Should equal")
     done()
   })
 
   t->test("should decode an float", t => {
-    t->equal(decodeString(float, `1`), Ok(1.), "Should equal")
+    t->equal(`1`->decodeString(float), Ok(1.), "Should equal")
     done()
   })
 
   t->test("should decode an bool", t => {
-    t->equal(decodeString(bool, `true`), Ok(true), "Should equal")
+    t->equal(`true`->decodeString(bool), Ok(true), "Should equal")
     done()
   })
 
   t->test("should decode null", t => {
-    t->equal(decodeString(null(1), `null`), Ok(1), "Should equal")
+    t->equal(`null`->decodeString(null(1)), Ok(1), "Should equal")
     done()
   })
 
   t->test("should decode empty array", t => {
-    t->equal(decodeString(array(int), `[]`), Ok([]), "Should equal")
+    t->equal(`[]`->decodeString(array(int)), Ok([]), "Should equal")
     done()
   })
 
   t->test("should decode array", t => {
-    t->equal(decodeString(array(int), `[1, 2, 3]`), Ok([1, 2, 3]), "Should equal")
+    t->equal(`[1, 2, 3]`->decodeString(array(int)), Ok([1, 2, 3]), "Should equal")
     done()
   })
 
   t->test("should decode empty list", t => {
-    t->equal(decodeString(list(int), `[]`), Ok(list{}), "Should equal")
+    t->equal(`[]`->decodeString(list(int)), Ok(list{}), "Should equal")
     done()
   })
 
   t->test("should decode list", t => {
-    t->equal(decodeString(list(int), `[1, 2, 3]`), Ok(list{1, 2, 3}), "Should equal")
+    t->equal(`[1, 2, 3]`->decodeString(list(int)), Ok(list{1, 2, 3}), "Should equal")
     done()
   })
 
@@ -52,18 +52,18 @@ zora("decode tests", t => {
     let res = Js.Dict.empty()
     res->Js.Dict.set("a", 1)
     res->Js.Dict.set("b", 2)
-    t->equal(decodeString(dict(int), `{ "a": 1, "b": 2 }`), Ok(res), "Should equal")
+    t->equal(`{ "a": 1, "b": 2 }`->decodeString(dict(int)), Ok(res), "Should equal")
     done()
   })
 
   t->test("should decode empty key/value pair", t => {
-    t->equal(decodeString(keyValuePairs(int), `{}`), Ok([]), "Should equal")
+    t->equal(`{}`->decodeString(keyValuePairs(int)), Ok([]), "Should equal")
     done()
   })
 
   t->test("should decode empty key/value pair", t => {
     t->equal(
-      decodeString(keyValuePairs(int), `{ "a": 1, "b": 2 }`),
+      `{ "a": 1, "b": 2 }`->decodeString(keyValuePairs(int)),
       Ok([("a", 1), ("b", 2)]),
       "Should equal",
     )
@@ -71,13 +71,13 @@ zora("decode tests", t => {
   })
 
   t->test("should decode tuple2", t => {
-    t->equal(decodeString(tuple2(int, string), `[1, "a"]`), Ok((1, "a")), "Should equal")
+    t->equal(`[1, "a"]`->decodeString(tuple2(int, string)), Ok((1, "a")), "Should equal")
     done()
   })
 
   t->test("should decode tuple6", t => {
     t->equal(
-      decodeString(tuple6(int, string, int, int, float, int), `[1, "a", 3, 4, 5, 6]`),
+      `[1, "a", 3, 4, 5, 6]`->decodeString(tuple6(int, string, int, int, float, int)),
       Ok((1, "a", 3, 4, 5., 6)),
       "Should equal",
     )
@@ -85,13 +85,13 @@ zora("decode tests", t => {
   })
 
   t->test("should decode field", t => {
-    t->equal(decodeString(field("a", int), `{ "a": 1, "b": 2 }`), Ok(1), "Should equal")
+    t->equal(`{ "a": 1, "b": 2 }`->decodeString(field("a", int)), Ok(1), "Should equal")
     done()
   })
 
   t->test("should decode field at topLevle", t => {
     t->equal(
-      decodeString(at("b", [], int), `{ "a": { "c": "test" }, "b": 2 }`),
+      `{ "a": { "c": "test" }, "b": 2 }`->decodeString(at("b", [], int)),
       Ok(2),
       "Should equal",
     )
@@ -100,7 +100,7 @@ zora("decode tests", t => {
 
   t->test("should decode field at", t => {
     t->equal(
-      decodeString(at("a", ["c"], string), `{ "a": { "c": "test" }, "b": 2 }`),
+      `{ "a": { "c": "test" }, "b": 2 }`->decodeString(at("a", ["c"], string)),
       Ok("test"),
       "Should equal",
     )
@@ -108,28 +108,28 @@ zora("decode tests", t => {
   })
 
   t->test("should decode array at index", t => {
-    t->equal(decodeString(index(0, int), `[1, 2, 3]`), Ok(1), "Should equal")
+    t->equal(`[1, 2, 3]`->decodeString(index(0, int)), Ok(1), "Should equal")
     done()
   })
 
   t->test("should decode optional bool valid", t => {
-    t->equal(decodeString(option(bool), `false`), Ok(Some(false)), "Should equal")
+    t->equal(`false`->decodeString(option(bool)), Ok(Some(false)), "Should equal")
     done()
   })
 
   t->test("should decode optional bool invalid", t => {
-    t->equal(decodeString(option(bool), `1`), Ok(None), "Should equal")
+    t->equal(`1`->decodeString(option(bool)), Ok(None), "Should equal")
     done()
   })
 
   t->test("should decode oneOf first", t => {
-    t->equal(decodeString(oneOf(float, []), `1`), Ok(1.), "Should equal")
+    t->equal(`1`->decodeString(oneOf(float, [])), Ok(1.), "Should equal")
     done()
   })
 
   t->test("should decode oneOf second", t => {
     t->equal(
-      decodeString(oneOf(field("a", int), [field("b", int)]), `{ "b": 1 }`),
+      `{ "b": 1 }`->decodeString(oneOf(field("a", int), [field("b", int)])),
       Ok(1),
       "Should equal",
     )
@@ -138,7 +138,7 @@ zora("decode tests", t => {
 
   t->test("should decode oneOf third", t => {
     t->equal(
-      decodeString(oneOf(field("a", int), [field("c", int), field("b", int)]), `{ "b": 1 }`),
+      `{ "b": 1 }`->decodeString(oneOf(field("a", int), [field("c", int), field("b", int)])),
       Ok(1),
       "Should equal",
     )
@@ -146,24 +146,23 @@ zora("decode tests", t => {
   })
 
   t->test("should decode value", t => {
-    let resValue = decodeString(value, "1")
+    let resValue = decodeString("1", value)
     switch resValue {
-    | Ok(value) => t->equal(decodeValue(float, value), Ok(1.), "Should equal")
+    | Ok(value) => t->equal(decodeValue(value, float), Ok(1.), "Should equal")
     | Error(_) => t->Zora.fail("Shouldn't have failed")
     }
     done()
   })
 
   t->test("should be able to map", t => {
-    t->equal(int->map(~f=i => i + 1)->decodeString(`1`), Ok(2), "Should equal")
+    t->equal("2"->decodeString(int->map(~f=i => i + 1)), Ok(2), "Should equal")
     done()
   })
 
   t->test("should be able to map2", t => {
     t->equal(
-      decodeString(
+      `{ "a": "hi", "b": 3 }`->decodeString(
         map2(field("a", string), field("b", int), ~f=(a, b) => Js.String.length(a) * b),
-        `{ "a": "hi", "b": 3 }`,
       ),
       Ok(6),
       "Should equal",
@@ -173,11 +172,10 @@ zora("decode tests", t => {
 
   t->test("should be able to map3", t => {
     t->equal(
-      decodeString(
+      `{ "a": "hi", "b": 3, "c": 3 }`->decodeString(
         map3(field("a", string), field("b", int), field("c", int), ~f=(a, b, c) =>
           Js.String.length(a) * b + c
         ),
-        `{ "a": "hi", "b": 3, "c": 3 }`,
       ),
       Ok(9),
       "Should equal",
@@ -186,27 +184,27 @@ zora("decode tests", t => {
   })
 
   t->test("should decode an nullable valid", t => {
-    t->equal(decodeString(nullable(float), `1`), Ok(Some(1.)), "Should equal")
+    t->equal(`1`->decodeString(nullable(float)), Ok(Some(1.)), "Should equal")
     done()
   })
 
   t->test("should decode an nullable null", t => {
-    t->equal(decodeString(nullable(float), `null`), Ok(None), "Should equal")
+    t->equal(`null`->decodeString(nullable(float)), Ok(None), "Should equal")
     done()
   })
 
   t->test("should not decode an nullable invalid", t => {
-    t->resultError(decodeString(nullable(float), `a`), "Should be error")
+    t->resultError(`a`->decodeString(nullable(float)), "Should be error")
     done()
   })
 
   t->test("should succeed", t => {
-    t->equal(decodeString(succeed(true), `"value"`), Ok(true), "Should equal")
+    t->equal(`"value"`->decodeString(succeed(true)), Ok(true), "Should equal")
     done()
   })
 
   t->test("should fail", t => {
-    t->resultError(decodeString(fail("bad"), `"value"`), "Should be error")
+    t->resultError(`"value"`->decodeString(fail("bad")), "Should be error")
     done()
   })
 

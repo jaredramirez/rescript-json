@@ -390,10 +390,10 @@ let fromString: string => option<value> = s =>
   | _ => None
   }
 
-let decodeString: (t<'a>, string) => result<'a, error> = (Decoder(decoder), s) =>
+let decodeString: (string, t<'a>) => result<'a, error> = (s, Decoder(decoder)) =>
   s->fromString->Utils.optToRes(Failure("Invalid JSON", J.string(s)))->B.Result.flatMap(decoder)
 
-let decodeValue: (t<'a>, value) => result<'a, error> = (Decoder(decoder), j) => decoder(j)
+let decodeValue: (value, t<'a>) => result<'a, error> = (j, Decoder(decoder)) => decoder(j)
 
 // print errors
 
