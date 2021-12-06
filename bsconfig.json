@@ -1,6 +1,6 @@
 {
   "name": "rescript-json",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "sources": [
     { "dir": "src", "subdirs": true },
     { "dir": "tests", "subdirs": true, "type": "dev" }
