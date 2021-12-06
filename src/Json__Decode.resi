@@ -111,9 +111,11 @@ This is helpful if you're dealing with a heterogeneous JSON array, like [[1, \"h
 {[
   decodeString(tuple2(int, string), \"[1, \\\"hey\\\"]\") == Ok((1, \"hey\"))
 ]}
-
-From [tuple3]-[tuple8], the use looks just like the examples for [tuple2] just with more elements & decoders.
 ")
+
+@@ocaml.text(
+  "For {! tuple3}-{! tuple8}, the use looks just like the examples for [tuple2] just with more elements & decoders."
+)
 
 let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)>
 
@@ -154,7 +156,6 @@ The object {e can} have other fields. Lots of them! The only thing this decoder 
 Check out {! map2} to see how to decode multiple fields!
 ")
 
-@@ocaml.text("")
 let at: (string, array<string>, t<'a>) => t<'a>
 @@ocaml.text("
 Decode a nested JSON object, requiring certain fields.
@@ -172,7 +173,6 @@ This is really just a shorthand for saying things like:
 ]}
 ")
 
-@@ocaml.text("")
 let index: (int, t<'a>) => t<'a>
 @@ocaml.text("
 Decode a nested JSON object, requiring a certain index.
@@ -283,7 +283,7 @@ Convert a decoding error into a [string] that is nice for debugging. The output 
 
 For example, the following decoder
 {[
-  at(\"a\", [\"b\"], int)->decodeS`tring(`{ \"a\": { \"b\": \"hey\" } }`)
+  at(\"a\", [\"b\"], int)->decodeString(`{ \"a\": { \"b\": \"hey\" } }`)
 ]}
 produces
 {v
@@ -293,26 +293,85 @@ Problem with the value at json[\"a\"][\"b\"]:
 
 Expecting an INT
 v}
+
+{b Note}: It would be cool to do nicer coloring, but for now I'm just keeping it simple. It is totally possible to crawl the [error] variant and create this separately though! You can always checkout the source to see how this function works.
 ")
 
-@@ocaml.text("{2:combine Combine}")
+@@ocaml.text("{2:combine Combine}
 
-@@ocaml.text("")
+Note: If you run out of map functions, take a look at {! andMap} which makes it easier to handle large objects, but produces lower quality type errors.
+")
+
 let map: (t<'a>, ~f: 'a => 'b) => t<'b>
+@@ocaml.text("
+Transform a decoder. Maybe you just want to know the length of a string:
 
-@@ocaml.text("")
+{[
+  let stringLength: t<int> = map(int, ~f=Js.Array.length)
+]}
+
+It is often helpful to use [map] with {! oneOf}, like when defining {! nullable}:
+
+{[
+  let nullable = (decoder: t<'a>): t<option<'a>> =
+    oneOf(
+      null(None),
+      [map(decoder, ~f=val => Some(val))]
+    )
+]}
+
+")
+
 let map2: (t<'a>, t<'b>, ~f: ('a, 'b) => 'c) => t<'c>
+@@ocaml.text("
+Try two decoders and then combine the result. We can use this to decode objects with many fields:
 
-@@ocaml.text("")
+{[
+  type point = { x: float, y: float }
+
+  let pointDecoder =
+    map2(
+      field(\"x\", float),
+      field(\"y\", float),
+      ~f=(x, y) => { x: x, y: y })
+    )
+
+  decodeString(pointDecoder, \"{ \\\"x\\\": 2, \\\"y\\\": 5 }\") == Ok({ x: 2, y: 5 })
+]}
+
+It tries each individual decoder and puts the result together with in the [~f] function.
+")
+
 let map3: (t<'a>, t<'b>, t<'c>, ~f: ('a, 'b, 'c) => 'val) => t<'val>
+@@ocaml.text("
+Try three decoders and then combine the result. We can use this to decode objects with many fields:
 
-@@ocaml.text("")
+{[
+  type person = { name: string, age: int, height: float }
+
+  let pointDecoder =
+    map2(
+      field(\"name\", string),
+      at(\"info\", [\"age\"], int),
+      at(\"info\", [\"height\"], float),
+      ~f=(name, age, height) => { name: name, age: age, height: height })
+    )
+
+  decodeString(pointDecoder, \"{ \\\"name\\\": \"Maria\", \\\"info\\\": { \\\"age\\\": 28, \\\"height\\\": 1.5 } }\")
+    == Ok({ name: \"Maria\", age: 28, height: 1.5 })
+]}
+
+It tries each individual decoder and puts the result together with in the [~f] function.
+")
+
+@@ocaml.text(
+  "For {! map4}-{! map8}, the use looks just like the examples for {! map2} and {! map3} just with more elements & decoders."
+)
+
 let map4: (t<'a>, t<'b>, t<'c>, t<'d>, ~f: ('a, 'b, 'c, 'd) => 'val) => t<'val>
 
-@@ocaml.text("")
 let map5: (t<'a>, t<'b>, t<'c>, t<'d>, t<'e>, ~f: ('a, 'b, 'c, 'd, 'e) => 'val) => t<'val>
 
-@@ocaml.text("")
 let map6: (
   t<'a>,
   t<'b>,
@@ -323,7 +382,6 @@ let map6: (
   ~f: ('a, 'b, 'c, 'd, 'e, 'f) => 'val,
 ) => t<'val>
 
-@@ocaml.text("")
 let map7: (
   t<'a>,
   t<'b>,
@@ -348,22 +406,81 @@ let map8: (
   ~f: ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h) => 'val,
 ) => t<'val>
 
-@@ocaml.text("")
-let andMap: (t<'a => 'b>, t<'a>) => t<'b>
-
 @@ocaml.text("{2:fancy Fancy}")
 
-@@ocaml.text("")
-let null: 'a => t<'a>
-
-@@ocaml.text("")
 let value: t<value>
+@@ocaml.text("
+  Do not do anything with a JSON value, just bring it into Rescript as a [value]. This can be useful if you have particularly complex data that you would like to deal with later. Or if you are going to send it out another [external] and do not care about its structure.
+")
 
-@@ocaml.text("")
-let andThen: (t<'a>, ~f: 'a => t<'b>) => t<'b>
+let null: 'a => t<'a>
+@@ocaml.text("
+Decode a JSON string into some Rescript value.
 
-@@ocaml.text("")
+{[
+  decodeString(null(false), \"null\") == Ok(false)
+  decodeString(null(42), \"null\")    == Ok(42)
+  decodeString(null(42), \"42\")      == Error(...)
+  decodeString(null(42), \"false\")   == Error(...)
+]}
+")
+
 let succeed: 'a => t<'a>
+@@ocaml.text("
+Ignore the JSON and produce a certain Elm value.
 
-@@ocaml.text("")
+{[
+  decodeString(succeed(42), \"true\")    == Ok(42)
+  decodeString(succeed(42), \"[1,2,3]\") == Ok(42)
+  decodeString(succeed(42), \"hello\")   == Error(...) // \"hello\" is not a valid JSON string, so this fails
+]}
+")
+
 let fail: string => t<'a>
+@@ocaml.text("
+Ignore the JSON and make the decoder fail. This is handy when used with {! oneOf} or {! andThen} where you want to give a custom error message in some case.
+
+See the {! andThen} docs for an example.
+")
+
+let andMap: (t<'a => 'b>, t<'a>) => t<'b>
+@@ocaml.text("
+Chain decoders together and then transfrom them all together. This is very often going to be used with {! succeed}.
+
+If you want to define {! map3}, you could do:
+{[
+  let map3: (t<'a>, t<'b>, t<'c>, ~f: ('a, 'b, 'c) => 'val) => t<'val> = (
+    decoderA,
+    decoderB,
+    decoderC,
+    ~f,
+  ) =>
+    succeed(f)
+      ->andMap(decoderA)
+      ->andMap(decoderB)
+      ->andMap(decoderC)
+]}
+")
+
+let andThen: (t<'a>, ~f: 'a => t<'b>) => t<'b>
+@@ocaml.text("
+Create decoders that depend on previous results. If you are creating versioned data, you might do something like this:
+
+{[
+  let infoDecoder1: t<info> = ...
+  let infoDecoder2: t<info> = ...
+  let infoDecoder3: t<info> = ...
+
+  let infoHelp = (version: int): t<info> =
+    switch version {
+    | 1 => infoDecoder1
+    | 2 => infoDecoder2
+    | 3 => infoDecoder3
+    | _ => fail(`Trying to decode info, but version ${Belt.Int.toString(version)} is not supported`)
+    }
+
+  let info: t<info> =
+    field(\"version\", int)
+      ->andThen(~f=infoHelp)
+]}
+")

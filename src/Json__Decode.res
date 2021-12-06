@@ -300,7 +300,11 @@ let tuple8: (
 
 // object primatives
 
-let rec fieldHelp = (j, key) =>
+let rec field: (string, t<'a>) => t<'a> = (key, Decoder(aDecoder)) => Decoder(
+  j =>
+    j->fieldHelp(key)->B.Result.flatMap(jv => aDecoder(jv)->Utils.resMapError(e => Field(key, e))),
+)
+and fieldHelp = (j, key) =>
   j
   ->J.decodeObject
   ->Utils.optToRes(Failure(`Expecting an OBJECT with a field named '${key}'`, j))
@@ -309,12 +313,10 @@ let rec fieldHelp = (j, key) =>
     ->Js.Dict.get(key)
     ->Utils.optToRes(Failure(`Expecting an OBJECT with a field named '${key}'`, j))
   )
-and field: (string, t<'a>) => t<'a> = (key, Decoder(aDecoder)) => Decoder(
-  j =>
-    j->fieldHelp(key)->B.Result.flatMap(jv => aDecoder(jv)->Utils.resMapError(e => Field(key, e))),
-)
 
-let rec atHelp: (string, list<string>, t<'a>) => t<'a> = (firstKey, keys, decoder) => {
+let rec at: (string, array<string>, t<'a>) => t<'a> = (firstKey, keys, decoder) =>
+  atHelp(firstKey, Belt.List.fromArray(keys), decoder)
+and atHelp: (string, list<string>, t<'a>) => t<'a> = (firstKey, keys, decoder) => {
   field(
     firstKey,
     switch keys {
@@ -323,8 +325,6 @@ let rec atHelp: (string, list<string>, t<'a>) => t<'a> = (firstKey, keys, decode
     },
   )
 }
-and at: (string, array<string>, t<'a>) => t<'a> = (firstKey, keys, decoder) =>
-  atHelp(firstKey, Belt.List.fromArray(keys), decoder)
 
 let index: (int, t<'a>) => t<'a> = (index, Decoder(aDecoder)) => Decoder(
   j =>
