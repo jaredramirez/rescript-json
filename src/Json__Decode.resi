@@ -1,9 +1,9 @@
-@@ocaml.text("{1:header Turn JSON values into Rescript values}")
+@@ocaml.text("Turn JSON values into Rescript values")
+
+@@ocaml.text("{1:primatives Primatives}")
 
 type t<'a>
 @@ocaml.text("A value that knows how to decode JSON values.")
-
-@@ocaml.text("{2:primatives Primatives}")
 
 let string: t<string>
 @@ocaml.text("
@@ -53,7 +53,7 @@ Decode a JSON float into a Rescript [float].
   decodeString(float, \"{ \\\"hello\\\": 42 }\") == Error(...)
 ]}")
 
-@@ocaml.text("{2:data-structures Data Structures}")
+@@ocaml.text("{1:data-structures Data Structures}")
 
 let nullable: t<'a> => t<option<'a>>
 @@ocaml.text("
@@ -138,7 +138,7 @@ let tuple8: (
   t<'h>,
 ) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)>
 
-@@ocaml.text("{2:obj-primatives Object Primatives}")
+@@ocaml.text("{1:obj-primatives Object Primatives}")
 
 let field: (string, t<'a>) => t<'a>
 @@ocaml.text("
@@ -185,7 +185,7 @@ Decode a nested JSON object, requiring a certain index.
 ]}
 ")
 
-@@ocaml.text("{2:inconsisent-structur Inconsistent Structure}")
+@@ocaml.text("{1:inconsisent-structur Inconsistent Structure}")
 
 let option: t<'a> => t<option<'a>>
 @@ocaml.text("
@@ -227,7 +227,7 @@ Why would someone generate JSON like this? Questions like this are not good for 
 You could also use [oneOf] to help version your data. Try the latest format, then a few older ones that you still support. You could use {! andThen} to be even more particular if you wanted.
 ")
 
-@@ocaml.text("{2:run-decoders Run Decoders}")
+@@ocaml.text("{1:run-decoders Run Decoders}")
 
 type value = Js.Json.t
 @@ocaml.text("Represents a JavaScript value.")
@@ -297,7 +297,7 @@ v}
 {b Note}: It would be cool to do nicer coloring, but for now I'm just keeping it simple. It is totally possible to crawl the [error] variant and create this separately though! You can always checkout the source to see how this function works.
 ")
 
-@@ocaml.text("{2:combine Combine}
+@@ocaml.text("{1:combine Combine}
 
 Note: If you run out of map functions, take a look at {! andMap} which makes it easier to handle large objects, but produces lower quality type errors.
 ")
@@ -350,7 +350,7 @@ Try three decoders and then combine the result. We can use this to decode object
   type person = { name: string, age: int, height: float }
 
   let pointDecoder =
-    map2(
+    map3(
       field(\"name\", string),
       at(\"info\", [\"age\"], int),
       at(\"info\", [\"height\"], float),
@@ -406,7 +406,7 @@ let map8: (
   ~f: ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h) => 'val,
 ) => t<'val>
 
-@@ocaml.text("{2:fancy Fancy}")
+@@ocaml.text("{1:fancy Fancy}")
 
 let value: t<value>
 @@ocaml.text("

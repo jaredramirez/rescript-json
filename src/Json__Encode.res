@@ -6,7 +6,8 @@ type value = J.t
 @val @scope("JSON")
 external stringify: (value, Js.Nullable.t<'a>, int) => string = "stringify"
 
-let encode: (value, int) => string = (v, i) => stringify(v, Js.Nullable.null, i)
+let encode: (value, ~indentLevel: int) => string = (v, ~indentLevel) =>
+  stringify(v, Js.Nullable.null, indentLevel)
 
 // primative
 

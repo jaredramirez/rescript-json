@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Encode (RescriptJson.Json.Encode)</title><link rel="stylesheet" href="../../../odoc.css"/><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../../../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body><div class="content"><header><nav><a href="../">Up</a> – <a href="../../">RescriptJson</a> &#x00BB; <a href="../">Json</a> &#x00BB; Encode</nav><h1>Module <code>Json.Encode</code></h1><nav class="toc"><ul><li><a href="#encoding">Encoding</a></li><li><a href="#primatives">Primatives</a></li><li><a href="#arrays">Arrays</a></li><li><a href="#objects">Objects</a></li></ul></nav></header><aside><p>Turn Rescript values into JSON values</p></aside><section><header><h2 id="encoding"><a href="#encoding" class="anchor"></a>Encoding</h2></header><dl><dt class="spec type" id="type-value"><a href="#type-value" class="anchor"></a><code><span class="keyword">type</span> <span class="keyword">nonrec</span> value</code><code> = Js.Json.t</code>;</dt></dl><aside><p>Represents a JavaScript value.</p></aside><dl><dt class="spec value" id="val-encode"><a href="#val-encode" class="anchor"></a><code><span class="keyword">let</span> encode: <a href="#type-value">value</a> <span>=&gt;</span> <span>indentLevel:int</span> <span>=&gt;</span> string;</code></dt></dl><aside><p>Convert a <code>value</code> into a prettified string.</p><pre><code class="ml">let maria: value =
+  object([
+    (&quot;name&quot;, &quot;Maria&quot;),
+    (&quot;age&quot;, 26),
+  ])
+
+encode(maria, 0)
+// {&quot;name&quot;:&quot;Maria&quot;,&quot;age&quot;:26}
+
+encode(maria, 4)
+// {
+//     &quot;name&quot;: &quot;Maria&quot;,
+//     &quot;age&quot;: 26
+// }</code></pre></aside></section><section><header><h2 id="primatives"><a href="#primatives" class="anchor"></a>Primatives</h2></header><dl><dt class="spec value" id="val-string"><a href="#val-string" class="anchor"></a><code><span class="keyword">let</span> string: string <span>=&gt;</span> <a href="#type-value">value</a>;</code></dt></dl><aside><p>Turn a <code>string</code> into a Rescript value.</p><pre><code class="ml">string(&quot;&quot;)-&gt;encode(~indentLevel=0)      == &quot;&quot;
+string(&quot;abc&quot;)-&gt;encode(~indentLevel=0)   == &quot;abc&quot;
+string(&quot;hello&quot;)-&gt;encode(~indentLevel=0) == &quot;hello&quot;</code></pre></aside><dl><dt class="spec value" id="val-int"><a href="#val-int" class="anchor"></a><code><span class="keyword">let</span> int: int <span>=&gt;</span> <a href="#type-value">value</a>;</code></dt></dl><aside><p>Turn an <code>int</code> into a Rescript value.</p><pre><code class="ml">int(42)-&gt;encode(~indentLevel=0) == &quot;42&quot;
+int(-7)-&gt;encode(~indentLevel=0) == &quot;-7&quot;
+int(0)-&gt;encode(~indentLevel=0)  == &quot;0&quot;</code></pre></aside><dl><dt class="spec value" id="val-float"><a href="#val-float" class="anchor"></a><code><span class="keyword">let</span> float: float <span>=&gt;</span> <a href="#type-value">value</a>;</code></dt></dl><aside><p>Turn a <code>float</code> into a Rescript value.</p><pre><code class="ml">float(3.14)-&gt;encode(~indentLevel=0)           == &quot;3.14&quot;
+float(1.618)-&gt;encode(~indentLevel=0)          == &quot;1.618&quot;
+float(-42)-&gt;encode(~indentLevel=0)            == &quot;-42&quot;
+float(Js.Float._NaN)-&gt;encode(~indentLevel=0)  == &quot;null&quot;
+float(infinity)-&gt;encode(~indentLevel=0)       == &quot;null&quot;</code></pre><p>Note: Floating point numbers are defined in the <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> standard which is hardcoded into almost all CPUs. This standard allows `infinity` and `Js.Matn._NaN). The <a href="https://www.json.org/json-en.html">JSON spec</a> does not include these values, so we encode them both as <code>null</code>.</p></aside><dl><dt class="spec value" id="val-bool"><a href="#val-bool" class="anchor"></a><code><span class="keyword">let</span> bool: bool <span>=&gt;</span> <a href="#type-value">value</a>;</code></dt></dl><aside><p>Turn a <code>bool</code> into a Rescript value.</p><pre><code class="ml">bool(true)-&gt;encode(~indentLevel=0)  == &quot;true&quot;
+bool(false)-&gt;encode(~indentLevel=0) == &quot;false&quot;</code></pre></aside><dl><dt class="spec value" id="val-null"><a href="#val-null" class="anchor"></a><code><span class="keyword">let</span> null: <a href="#type-value">value</a>;</code></dt></dl><aside><p>Create a <code>null</code> JSON value</p><pre><code class="ml">null-&gt;encode(~indentLevel=0) == &quot;null&quot;</code></pre></aside></section><section><header><h2 id="arrays"><a href="#arrays" class="anchor"></a>Arrays</h2></header><dl><dt class="spec value" id="val-array"><a href="#val-array" class="anchor"></a><code><span class="keyword">let</span> array: array(<span class="type-var">'i</span>) <span>=&gt;</span> <span>(<span class="type-var">'i</span> <span>=&gt;</span> <a href="#type-value">value</a>)</span> <span>=&gt;</span> <a href="#type-value">value</a>;</code></dt></dl><aside><p>Turn an <code>array</code> into a JSON array.</p><pre><code class="ml">array([1, 2, 3], int)-&gt;encode(~indentLevel=0)         == &quot;[1,2,3]&quot;
+array([true, false], bool)-&gt;encode(~indentLevel=0)    == &quot;[true,false]&quot;
+array([&quot;a&quot;, &quot;b&quot;], string)-&gt;encode(~indentLevel=0)     == &quot;[\&quot;a\&quot;,\&quot;b\&quot;]&quot;</code></pre></aside><dl><dt class="spec value" id="val-list"><a href="#val-list" class="anchor"></a><code><span class="keyword">let</span> list: list(<span class="type-var">'i</span>) <span>=&gt;</span> <span>(<span class="type-var">'i</span> <span>=&gt;</span> <a href="#type-value">value</a>)</span> <span>=&gt;</span> <a href="#type-value">value</a>;</code></dt></dl><aside><p>Turn a <code>list</code> into a JSON array.</p><pre><code class="ml">list(list{1, 2, 3}, int)-&gt;encode(~indentLevel=0)         == &quot;[1,2,3]&quot;
+list(list{true, false}, bool)-&gt;encode(~indentLevel=0)    == &quot;[true,false]&quot;
+list(list{&quot;a&quot;, &quot;b&quot;}, string)-&gt;encode(~indentLevel=0)     == &quot;[\&quot;a\&quot;,\&quot;b\&quot;]&quot;</code></pre></aside></section><section><header><h2 id="objects"><a href="#objects" class="anchor"></a>Objects</h2></header><dl><dt class="spec value" id="val-object"><a href="#val-object" class="anchor"></a><code><span class="keyword">let</span> object: array(<span>(string, <a href="#type-value">value</a>)</span>) <span>=&gt;</span> <a href="#type-value">value</a>;</code></dt></dl><aside><p>Create a JSON object.</p><pre><code class="ml">let maria: value =
+  object([
+    (&quot;name&quot;, &quot;Maria&quot;),
+    (&quot;age&quot;, 26),
+  ])
+
+encode(maria, 0)
+// {&quot;name&quot;:&quot;Maria&quot;,&quot;age&quot;:26}</code></pre></aside><dl><dt class="spec value" id="val-dict"><a href="#val-dict" class="anchor"></a><code><span class="keyword">let</span> dict: Js.Dict.t(<a href="#type-value">value</a>) <span>=&gt;</span> <a href="#type-value">value</a>;</code></dt></dl><aside><p>Turn a `Js.Dict.t` into a JSON object.</p><pre><code class="ml">let maria: value =
+  [
+    (&quot;name&quot;, &quot;Maria&quot;),
+    (&quot;age&quot;, 26),
+  ]
+  -&gt;Js.Dict.fromArray
+
+encode(maria, 0)
+// {&quot;name&quot;:&quot;Maria&quot;,&quot;age&quot;:26}</code></pre></aside></section></div></body></html>

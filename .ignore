@@ -28,3 +28,4 @@ lib/bs
 .bsb.lock
 /node_modules/
 .direnv
+docs/gen
