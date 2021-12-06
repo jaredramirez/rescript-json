@@ -7,8 +7,16 @@
 yarn add rescript-json
 ```
 
-### Usage
+Then in `bsconfig.js`:
+```
+{
+  ...,
+  "bs-dependencies": [..., "rescript-json"]
+}
+```
 
-Usage & docs are coming! The API is 90% the same as the Elm package linked above. The biggest difference is its all `t-first` for better inference and usability with `->`
+### Checkout the Docs!
+
+The docs are [here](https://jaredramirez.github.io/rescript-json/gen/RescriptJson/Json/)!
 
 
