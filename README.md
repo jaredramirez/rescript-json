@@ -1,13 +1,17 @@
 ## rescript-json
 
-> A port of https://package.elm-lang.org/packages/elm/json/latest/ to rescript
+This package helps you convert between Rescript values and JSON values.
+
+This package is usually used alongside http requests to talk to servers or with {{:https://rescript-lang.org/docs/manual/latest/external} external} calls talk to JavaScript.
 
 ### Install
+
+In your projects root directory, run:
 ```
 yarn add rescript-json
 ```
 
-Then in `bsconfig.js`:
+Then update `bsconfig.js` to include this package as a dependency:
 ```
 {
   ...,
@@ -15,8 +19,15 @@ Then in `bsconfig.js`:
 }
 ```
 
-### Checkout the Docs!
+### API Docs
 
 The docs are [here](https://jaredramirez.github.io/rescript-json/gen/RescriptJson/Json/)!
 
+### Credit
+
+This package is a port of [Elm's JSON decoding library](https://package.elm-lang.org/packages/elm/json/latest/).
+
+When creating this package, I basically went through the docs for the Elm library and implemented a Rescript version. Additional, because it's so well done, the documentation is copied verbatim.
+
+Thanks to Evan Czaplicki ([@evancz](https://github.com/evancz)) and all other folks for designing and creating the excellent Elm package!
 

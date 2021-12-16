@@ -2,7 +2,7 @@
   "name": "rescript-json",
   "keywords": ["rescript", "json", "decode", "encode"],
   "homepage": "https://jaredramirez.github.io/rescript-json",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": "https://github.com/jaredramirez/rescript-json.git",
   "author": "Jared Ramirez <jaredramirez@hey.com>",

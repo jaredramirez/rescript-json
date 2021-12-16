@@ -1,9 +1,12 @@
 {
   "name": "rescript-json",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "sources": [
     { "dir": "src", "subdirs": true },
     { "dir": "tests", "subdirs": true, "type": "dev" }
   ],
-  "bs-dev-dependencies": ["@dusty-phillips/rescript-zora"]
+  "bs-dev-dependencies": ["@dusty-phillips/rescript-zora"],
+  "warnings": {
+    "error": "+5+8"
+  }
 }

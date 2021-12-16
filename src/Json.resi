@@ -5,6 +5,23 @@ This package helps you convert between Rescript values and JSON values.
 This package is usually used alongside http requests to talk to servers or with {{:https://rescript-lang.org/docs/manual/latest/external} external} calls talk to JavaScript.
 ")
 
+@@ocaml.text("{2 Install}")
+
+@@ocaml.text("
+In your projects root directory, run:
+{[
+  yarn add rescript-json
+]}
+
+Then update `bsconfig.js` to include this package as a dependency:
+{[
+  {
+    ...,
+    \"bs-dependencies\": [..., \"rescript-json\"]
+  }
+]}
+")
+
 @@ocaml.text("{2 Example}")
 
 @@ocaml.text("
@@ -59,13 +76,6 @@ Point is, the goal should be:
 So say you decide to make the name field more precise. Instead of a [string], you want to use codes from the {{: https://www.who.int/classifications/classification-of-diseases} International Classification of Diseases} recommended by the World Health Organization. These {{: https://icd.who.int/browse10/2016/en} codes} are used in a lot of mortality data sets. So it may make sense to make a separate [icdCode] module with its own [IcdCode.encode] and [IcdCode.decoder] that ensure you are working with valid codes. From there, you can use them as building blocks in the [Cause] module!
 ")
 
-@@ocaml.text("{2 Credit}")
-@@ocaml.text("
-This package is a port of {{: https://package.elm-lang.org/packages/elm/json/latest/} Elm's JSON decoding library}.
-
-Nearly all of the functions in this library, as well as its documentation, are copied from there. Thanks to Evan Czaplicki ({{: https://github.com/evancz} @evancz}) and all other folks who worked the Elm package!
-")
-
 @@ocaml.text("{2 Docs}")
 
 type value = Js.Json.t
@@ -76,3 +86,12 @@ module Decode = Json__Decode
 
 module Encode = Json__Encode
 @@ocaml.text("The Encode module. Accessed by [Json.Encode.*]")
+
+@@ocaml.text("{2 Credit}")
+@@ocaml.text("
+This package is a port of {{: https://package.elm-lang.org/packages/elm/json/latest/} Elm's JSON decoding library}.
+
+When creating this package, I basically went through the docs for the Elm library and implemented a Rescript version. Additional, because it's so well done, the documentation is copied almost verbatim.
+
+Thanks to Evan Czaplicki ({{: https://github.com/evancz} \@evancz}) and all other folks for designing and creating the excellent Elm package!
+")
