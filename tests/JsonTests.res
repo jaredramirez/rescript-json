@@ -155,7 +155,7 @@ zora("decode tests", t => {
   })
 
   t->test("should be able to map", t => {
-    t->equal("2"->decodeString(int->map(~f=i => i + 1)), Ok(2), "Should equal")
+    t->equal("2"->decodeString(int->map(~f=i => i + 1)), Ok(3), "Should equal")
     done()
   })
 

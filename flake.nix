@@ -11,7 +11,12 @@
             pkgs = nixpkgs.legacyPackages.${system};
           in
             {
-              devShell = import ./shell.nix { inherit pkgs; };
+              devShell =  pkgs.mkShell {
+                buildInputs = with pkgs; [
+                  nodejs
+                  (yarn.override { nodejs = nodejs; })
+                ];
+              };
             }
       );
 }
