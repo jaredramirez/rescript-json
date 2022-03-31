@@ -2,7 +2,7 @@
 
 This package helps you convert between Rescript values and JSON values.
 
-This package is usually used alongside http requests to talk to servers or with {{:https://rescript-lang.org/docs/manual/latest/external} external} calls talk to JavaScript.
+This package is usually used alongside http requests to talk to servers or with [external](https://rescript-lang.org/docs/manual/latest/external) calls talk to JavaScript.
 
 ### Install
 
