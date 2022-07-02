@@ -217,8 +217,8 @@ Helpful for dealing with optional fields. Here are a few slightly different exam
   decodeString(json, option(field(\"name\",   int  ))) == Ok(None)
   decodeString(json, option(field(\"height\", float))) == Ok(None)
 
-  decodeString(json, field(\"height\", option(float))) == Ok(Some(24))
-  decodeString(json, field(\"height\", option(float))) == Ok(None)
+  decodeString(json, field(\"age\", option(float))) == Ok(Some(24))
+  decodeString(json, field(\"name\", option(float))) == Ok(None)
   decodeString(json, field(\"height\", option(float))) == Error(...)
 ]}
 
