@@ -1,6 +1,6 @@
 @@ocaml.text("Turn JSON values into Rescript values")
 
-@@ocaml.text("{1:primatives Primatives}")
+@@ocaml.text("{1:primitives Primitives}")
 
 type t<'a>
 @@ocaml.text("A value that knows how to decode JSON values.")
@@ -115,10 +115,10 @@ let tuple2: (t<'a>, t<'b>) => t<('a, 'b)>
 @@ocaml.text("
 Decode a JSON value into a Rescript tuple with 2 elements.
 
-This is helpful if you're dealing with a heterogeneous JSON array, like [[1, \"hey\"]]. {e Modeling your JSON like this is generally a bad idea.} Unfortunatly, we sometimes have to use JSON/JavaScript from places outside our control, hence these functions.
+This is helpful if you're dealing with a heterogeneous JSON array, like [[1, \"hey\"]]. {e Modeling your JSON like this is generally a bad idea.} Unfortunately, we sometimes have to use JSON/JavaScript from places outside our control, hence these functions.
 
 {[
-  decodeString(\"[1, \\\"hey\\\"]\", tuple2(int, string)) == Ok((1, \"hey\"))
+  decodeString(\"[1, \\\"hey\\\"]\", tuple2(int, string))
     == Ok((1, \"hey\"))
 ]}
 ")
@@ -128,7 +128,7 @@ let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)>
 Decode a JSON value into a Rescript tuple with 3 elements.
 
 {[
-  decodeString(\"[1, 8.0, \\\"hey\\\"]\", tuple3(int, float, string)) == Ok((1, \"hey\"))
+  decodeString(\"[1, 8.0, \\\"hey\\\"]\", tuple3(int, float, string))
     == Ok((1, 8., \"hey\"))
 ]}
 ")
@@ -156,7 +156,7 @@ let tuple8: (
   t<'h>,
 ) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)>
 
-@@ocaml.text("{1:obj-primatives Object Primatives}")
+@@ocaml.text("{1:obj-primitives Object Primitives}")
 
 let field: (string, t<'a>) => t<'a>
 @@ocaml.text("
@@ -188,7 +188,7 @@ Decode a nested JSON object, requiring certain fields.
 
 This is really just a shorthand for saying things like:
 {[
-  field(\"person\", field(\"name\"), string)) == at([\"person\", \"name\"], string)
+  field(\"person\", field(\"name\", string)) == at([\"person\", \"name\"], string)
 ]}
 ")
 
@@ -217,8 +217,8 @@ Helpful for dealing with optional fields. Here are a few slightly different exam
   decodeString(json, option(field(\"name\",   int  ))) == Ok(None)
   decodeString(json, option(field(\"height\", float))) == Ok(None)
 
-  decodeString(json, field(\"height\", option(float))) == Ok(Some(24))
-  decodeString(json, field(\"height\", option(float))) == Ok(None)
+  decodeString(json, field(\"age\", option(float))) == Ok(Some(24))
+  decodeString(json, field(\"name\", option(float))) == Ok(None)
   decodeString(json, field(\"height\", option(float))) == Error(...)
 ]}
 
@@ -448,7 +448,7 @@ Decode a JSON string into some Rescript value.
 
 let succeed: 'a => t<'a>
 @@ocaml.text("
-Ignore the JSON and produce a certain Elm value.
+Ignore the JSON and produce a certain Rescript value.
 
 {[
   decodeString(\"true\", succeed(42))    == Ok(42)
