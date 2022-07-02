@@ -1,6 +1,6 @@
 @@ocaml.text("Turn JSON values into Rescript values")
 
-@@ocaml.text("{1:primatives Primatives}")
+@@ocaml.text("{1:primitives Primitives}")
 
 type t<'a>
 @@ocaml.text("A value that knows how to decode JSON values.")
@@ -156,7 +156,7 @@ let tuple8: (
   t<'h>,
 ) => t<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)>
 
-@@ocaml.text("{1:obj-primatives Object Primatives}")
+@@ocaml.text("{1:obj-primitives Object Primitives}")
 
 let field: (string, t<'a>) => t<'a>
 @@ocaml.text("
