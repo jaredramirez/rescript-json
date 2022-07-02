@@ -448,7 +448,7 @@ Decode a JSON string into some Rescript value.
 
 let succeed: 'a => t<'a>
 @@ocaml.text("
-Ignore the JSON and produce a certain Elm value.
+Ignore the JSON and produce a certain Rescript value.
 
 {[
   decodeString(\"true\", succeed(42))    == Ok(42)
