@@ -31,3 +31,8 @@ When creating this package, I basically went through the docs for the Elm librar
 
 Thanks to Evan Czaplicki ([@evancz](https://github.com/evancz)) and all other folks for designing and creating the excellent Elm package!
 
+### Changelog
+
+#### 1.0.3
+
+- Rescript 10
