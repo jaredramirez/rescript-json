@@ -188,7 +188,7 @@ Decode a nested JSON object, requiring certain fields.
 
 This is really just a shorthand for saying things like:
 {[
-  field(\"person\", field(\"name\"), string)) == at([\"person\", \"name\"], string)
+  field(\"person\", field(\"name\", string)) == at([\"person\", \"name\"], string)
 ]}
 ")
 
