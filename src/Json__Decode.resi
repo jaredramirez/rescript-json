@@ -115,10 +115,10 @@ let tuple2: (t<'a>, t<'b>) => t<('a, 'b)>
 @@ocaml.text("
 Decode a JSON value into a Rescript tuple with 2 elements.
 
-This is helpful if you're dealing with a heterogeneous JSON array, like [[1, \"hey\"]]. {e Modeling your JSON like this is generally a bad idea.} Unfortunatly, we sometimes have to use JSON/JavaScript from places outside our control, hence these functions.
+This is helpful if you're dealing with a heterogeneous JSON array, like [[1, \"hey\"]]. {e Modeling your JSON like this is generally a bad idea.} Unfortunately, we sometimes have to use JSON/JavaScript from places outside our control, hence these functions.
 
 {[
-  decodeString(\"[1, \\\"hey\\\"]\", tuple2(int, string)) == Ok((1, \"hey\"))
+  decodeString(\"[1, \\\"hey\\\"]\", tuple2(int, string))
     == Ok((1, \"hey\"))
 ]}
 ")
@@ -128,7 +128,7 @@ let tuple3: (t<'a>, t<'b>, t<'c>) => t<('a, 'b, 'c)>
 Decode a JSON value into a Rescript tuple with 3 elements.
 
 {[
-  decodeString(\"[1, 8.0, \\\"hey\\\"]\", tuple3(int, float, string)) == Ok((1, \"hey\"))
+  decodeString(\"[1, 8.0, \\\"hey\\\"]\", tuple3(int, float, string))
     == Ok((1, 8., \"hey\"))
 ]}
 ")
