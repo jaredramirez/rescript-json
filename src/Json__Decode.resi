@@ -481,6 +481,19 @@ If you want to define {! map3}, you could do:
       ->andMap(decoderB)
       ->andMap(decoderC)
 ]}
+
+You can use this function to chain together [field] decoders to construct a Rescript record from a JSON one:
+{[
+  // The JSON this decodes would look like: { "id": 1, name: "Marcos" }
+  type t = { id: int, name: string }
+  let decoder: Json.Decode.t<t> = {
+    open Json.Decode
+    succeed((id, name) => { id: id, name: name })
+    ->andMap(field("id", int))
+    ->andMap(field("name", string))
+  }  
+]}
+This is style of decoding is sometimes called Pipeline decoding!
 ")
 
 let andThen: (t<'a>, ~f: 'a => t<'b>) => t<'b>

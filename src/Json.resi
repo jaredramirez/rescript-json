@@ -82,10 +82,10 @@ type value = Js.Json.t
 @@ocaml.text("Represents a JavaScript value.")
 
 module Decode = Json__Decode
-@@ocaml.text("The Decode module. Accessed by [Json.Decode.*]")
+@@ocaml.text("The Decode module. Accessed by [Json.Decode.*]. The word [Decode] above is a link. You can find documentation for each function on that page!")
 
 module Encode = Json__Encode
-@@ocaml.text("The Encode module. Accessed by [Json.Encode.*]")
+@@ocaml.text("The Encode module. Accessed by [Json.Encode.*]. The word [Encode] above is a link. You can find documentation for each function on that page!")
 
 @@ocaml.text("{2 Credit}")
 @@ocaml.text("
