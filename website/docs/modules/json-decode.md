@@ -565,7 +565,7 @@ decodeString("[1,2,3]", succeed(42)) == Ok(42)
 decodeString("hello", succeed(42))   == Error(...) // "hello" is not a valid JSON string, so this fails
 ```
 
-### `succeed`
+### `fail`
 
 ```rescript
 let fail: string => t<'a>
