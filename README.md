@@ -16,6 +16,10 @@ Thanks to Evan Czaplicki ([@evancz](https://github.com/evancz)) and all other fo
 
 ### Changelog
 
+#### 1.0.4
+
+- New docs!
+
 #### 1.0.3
 
 - Rescript 10
