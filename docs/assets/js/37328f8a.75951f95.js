@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkrescript_json=self.webpackChunkrescript_json||[]).push([[731],{9235:e=>{e.exports=JSON.parse('{"title":"Modules","description":"All modules exposed by rescript-json","slug":"/category/modules","permalink":"/category/modules","navigation":{"previous":{"title":"Intro","permalink":"/"},"next":{"title":"Json","permalink":"/modules/json"}}}')}}]);

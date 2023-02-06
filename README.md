@@ -2,26 +2,9 @@
 
 This package helps you convert between Rescript values and JSON values.
 
-This package is usually used alongside http requests to talk to servers or with [external](https://rescript-lang.org/docs/manual/latest/external) calls talk to JavaScript.
-
-### Install
-
-In your projects root directory, run:
-```
-yarn add rescript-json
-```
-
-Then update `bsconfig.js` to include this package as a dependency:
-```
-{
-  ...,
-  "bs-dependencies": [..., "rescript-json"]
-}
-```
-
 ### API Docs
 
-The docs are [here](https://jaredramirez.github.io/rescript-json/gen/RescriptJson/Json/)!
+See the API docs for installation/usage [here](https://rescript-json.jaredramirez.omg.lol/)!
 
 ### Credit
 

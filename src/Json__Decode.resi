@@ -10,9 +10,9 @@ let string: t<string>
 Decode a JSON string into a Rescript [string].
 
 {[
-  decodeString(\"true\", string)               == Error(...)
-  decodeString(\"42\", string)                 == Error(...)
-  decodeString(\"3.14\", string)               == Error(...)
+  decodeString(\"true\", string)                   == Error(...)
+  decodeString(\"42\", string)                     == Error(...)
+  decodeString(\"3.14\", string)                   == Error(...)
   decodeString(\"\\\"hello\\\"\", string)          == Ok(\"hello\")
   decodeString(\"{ \\\"hello\\\": 42 }\", string)  == Error(...)
 ]}
@@ -23,9 +23,9 @@ let bool: t<bool>
 Decode a JSON bool into a Rescript [bool].
 
 {[
-  decodeString(\"true\", bool)                == Ok(true)
-  decodeString(\"42\", bool)                  == Error(...)
-  decodeString(\"3.14\", bool)                == Error(...)
+  decodeString(\"true\", bool)                    == Ok(true)
+  decodeString(\"42\", bool)                      == Error(...)
+  decodeString(\"3.14\", bool)                    == Error(...)
   decodeString(\"\\\"hello\\\"\", bool)           == Error(...)
   decodeString(\"{ \\\"hello\\\": 42 }\", bool)   == Error(...)
 ]}
@@ -36,9 +36,9 @@ let int: t<int>
 Decode a JSON int into a Rescript [int].
 
 {[
-  decodeString(\"true\", int)              == Error(...)
-  decodeString(\"42\", int)                == Ok(42)
-  decodeString(\"3.14\", int)              == Error(...)
+  decodeString(\"true\", int)                  == Error(...)
+  decodeString(\"42\", int)                    == Ok(42)
+  decodeString(\"3.14\", int)                  == Error(...)
   decodeString(\"\\\"hello\\\"\", int)         == Error(...)
   decodeString(\"{ \\\"hello\\\": 42 }\", int) == Error(...)
 ]}
@@ -49,9 +49,9 @@ let float: t<float>
 Decode a JSON float into a Rescript [float].
 
 {[
-  decodeString(\"true\", float)              == Error(...)
-  decodeString(\"42\", float)                == Error(...)
-  decodeString(\"3.14\", float)              == Ok(3.14)
+  decodeString(\"true\", float)                  == Error(...)
+  decodeString(\"42\", float)                    == Error(...)
+  decodeString(\"3.14\", float)                  == Ok(3.14)
   decodeString(\"\\\"hello\\\"\", float)         == Error(...)
   decodeString(\"{ \\\"hello\\\": 42 }\", float) == Error(...)
 ]}
@@ -163,10 +163,10 @@ let field: (string, t<'a>) => t<'a>
 Decode a JSON object, requiring a particular field.
 
 {[
-  decodeString(\"{ \\\"x\\\": 42 }\",             field(\"x\", int))== Ok(42)
+  decodeString(\"{ \\\"x\\\": 42 }\",                 field(\"x\", int))== Ok(42)
   decodeString(\"{ \\\"x\\\": 42, \\\"y\\\": 50 }\",  field(\"x\", int))== Ok(42)
-  decodeString(\"{ \\\"x\\\": true }\",           field(\"x\", int))== Error(...)
-  decodeString(\"{ \\\"y\\\": 50 }\",             field(\"x\", int))== Error(...)
+  decodeString(\"{ \\\"x\\\": true }\",               field(\"x\", int))== Error(...)
+  decodeString(\"{ \\\"y\\\": 50 }\",                 field(\"x\", int))== Error(...)
 ]}
 
 

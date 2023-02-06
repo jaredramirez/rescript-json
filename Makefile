@@ -6,12 +6,6 @@ dev:
 build:
 	rescript build -with-deps
 
-dev-docs:
-	chokidar "src/**/*.*" "tests/**/*.*" -c "make docs" --initial
-
-docs:
-	make build && rm -rf ./lib/bs/tests && bsdoc build RescriptJson -o docs/gen
-
 clean:
 	rescript clean
 	

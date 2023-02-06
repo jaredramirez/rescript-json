@@ -1,0 +1,9 @@
+{
+  "label": "Modules",
+  "position": 2,
+  "collapsible": false,
+  "link": {
+    "type": "generated-index",
+    "description": "All modules exposed by rescript-json"
+  }
+}

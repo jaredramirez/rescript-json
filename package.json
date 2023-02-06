@@ -14,7 +14,6 @@
   "license": "MIT",
   "devDependencies": {
     "@dusty-phillips/rescript-zora": "^3.0.0",
-    "bsdoc": "^6.0.4-alpha",
     "chokidar-cli": "^3.0.0",
     "nodemon": "^2.0.15",
     "rescript": "10",
