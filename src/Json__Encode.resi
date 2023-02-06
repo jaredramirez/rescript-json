@@ -100,7 +100,7 @@ Turn an [array] into a JSON array.
 
 What if you need to encode your Rescript into a heterogeneous JSON array, like [[1, \"hey\"]]. {e Modeling your JSON like this is generally a bad idea.} Unfortunately, we sometimes have to send JSON/JavaScript to places outside our control. If this is the case for you, can use [array] like so:
 {[
-  [int(1), string("Hey")]->array(v => v) == \"[1,\\\"Hey\\\"]\"
+  [int(1), string(\"Hey\")]->array(v => v) == \"[1,\\\"Hey\\\"]\"
 ]}
 The idea is we have an `array` of `Json.value`s, then for the function argument of `array` we use the identity function.
 ")

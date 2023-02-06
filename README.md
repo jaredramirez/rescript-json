@@ -16,6 +16,10 @@ Thanks to Evan Czaplicki ([@evancz](https://github.com/evancz)) and all other fo
 
 ### Changelog
 
+#### 1.0.5
+
+- Fix compile error introduced in 1.0.4
+
 #### 1.0.4
 
 - New docs!

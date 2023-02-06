@@ -484,14 +484,14 @@ If you want to define {! map3}, you could do:
 
 You can use this function to chain together [field] decoders to construct a Rescript record from a JSON one:
 {[
-  // The JSON this decodes would look like: { "id": 1, name: "Marcos" }
   type t = { id: int, name: string }
   let decoder: Json.Decode.t<t> = {
     open Json.Decode
     succeed((id, name) => { id: id, name: name })
-    ->andMap(field("id", int))
-    ->andMap(field("name", string))
+    ->andMap(field(\"id\", int))
+    ->andMap(field(\"name\", string))
   }  
+  // The JSON this decodes would look like: { \"id\": 1, name: \"Marcos\" }
 ]}
 This is style of decoding is sometimes called Pipeline decoding!
 ")
